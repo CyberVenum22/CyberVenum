@@ -1,42 +1,18 @@
-const ATTEMPTS = {};
-const MAX = 5;
-const LOCK = 30 * 1000;
+const crypto = require('crypto');
 
-exports.handler = async (event) => {
-  const headers = { 'Content-Type': 'application/json' };
+export default async function handler(req, res) {
+  if (req.method !== 'POST') return res.status(405).json({ error: 'Method Not Allowed' });
 
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, headers, body: JSON.stringify({ error: 'Method Not Allowed' }) };
-  }
-
-  const ip = event.headers['x-forwarded-for'] || 'unknown';
-  const now = Date.now();
-
-  if (!ATTEMPTS[ip]) ATTEMPTS[ip] = { count: 0, locked: 0 };
-  const a = ATTEMPTS[ip];
-
-  if (now < a.locked) {
-    return { statusCode: 429, headers, body: JSON.stringify({ error: 'Bloqueado temporariamente.' }) };
-  }
-
-  let body;
-  try { body = JSON.parse(event.body); } catch {
-    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Body inválido' }) };
-  }
-
-  const { password } = body;
+  const { password } = req.body;
   const correctPassword = process.env.ACCESS_PASSWORD;
+  const sessionToken = process.env.SESSION_TOKEN;
 
-  if (!password || !correctPassword) {
-    return { statusCode: 400, headers, body: JSON.stringify({ error: 'Parâmetros inválidos' }) };
+  const bufferPass = Buffer.from(password || "");
+  const bufferCorrect = Buffer.from(correctPassword || "");
+
+  if (bufferPass.length === bufferCorrect.length && crypto.timingSafeEqual(bufferPass, bufferCorrect)) {
+    return res.status(200).json({ ok: true, token: sessionToken });
   }
 
-  if (password !== correctPassword) {
-    a.count++;
-    if (a.count >= MAX) { a.locked = now + LOCK; a.count = 0; }
-    return { statusCode: 401, headers, body: JSON.stringify({ error: 'Senha incorreta' }) };
-  }
-
-  a.count = 0;
-  return { statusCode: 200, headers, body: JSON.stringify({ ok: true }) };
-};
+  return res.status(401).json({ error: 'Senha incorreta' });
+}
