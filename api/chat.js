@@ -12,12 +12,67 @@ function getRateLimit(ip) {
   return RATE_LIMIT[ip].count > MAX_REQUESTS;
 }
 
-const SYSTEM_PROMPT = `Você é SecureBot, um agente de IA especialista sênior em cibersegurança criado por Aleff, fundador da ProxyBT. Responda SEMPRE em português brasileiro.
+// Cache de contexto de segurança atualizado
+let securityContext = null;
+let lastContextUpdate = 0;
+const CONTEXT_TTL = 60 * 60 * 1000; // atualiza a cada 1 hora
 
-IDENTIDADE: Se perguntarem quem te criou, diga que foi Aleff, da ProxyBT.
+async function doWebSearch(query) {
+  const apiKey = process.env.SERPER_API_KEY;
+  if (!apiKey) return 'Busca web não configurada.';
+  try {
+    const res = await fetch('https://google.serper.dev/search', {
+      method: 'POST',
+      headers: { 'X-API-KEY': apiKey, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ q: query, gl: 'br', hl: 'pt', num: 6 })
+    });
+    if (!res.ok) return 'Erro na busca web.';
+    const data = await res.json();
+    const results = [];
+    if (data.answerBox?.answer) results.push(`Resposta direta: ${data.answerBox.answer}`);
+    if (data.organic?.length) {
+      data.organic.slice(0, 5).forEach((r, i) => {
+        results.push(`[${i+1}] ${r.title}\n${r.snippet || ''}\nFonte: ${r.link}`);
+      });
+    }
+    if (data.topStories?.length) {
+      results.push('--- Notícias recentes ---');
+      data.topStories.slice(0, 4).forEach((s, i) => {
+        results.push(`[N${i+1}] ${s.title} (${s.date || 'recente'})\nFonte: ${s.link}`);
+      });
+    }
+    return results.length > 0 ? results.join('\n\n') : 'Sem resultados.';
+  } catch (err) {
+    return `Erro ao buscar: ${err.message}`;
+  }
+}
+
+async function getSecurityContext() {
+  const now = Date.now();
+  if (securityContext && now - lastContextUpdate < CONTEXT_TTL) {
+    return securityContext;
+  }
+  try {
+    const [news, cves] = await Promise.all([
+      doWebSearch('cybersecurity news today 2025 vulnerabilities breaches'),
+      doWebSearch('CVE critical vulnerabilities disclosed this week 2025')
+    ]);
+    securityContext = `CONTEXTO DE SEGURANÇA ATUALIZADO (${new Date().toLocaleDateString('pt-BR')}):\n\nNOTÍCIAS RECENTES:\n${news}\n\nCVEs RECENTES:\n${cves}`;
+    lastContextUpdate = now;
+  } catch {
+    securityContext = 'Contexto de segurança temporariamente indisponível.';
+  }
+  return securityContext;
+}
+
+function buildSystemPrompt(secCtx) {
+  return `Você é Cyber Venum, um agente de IA especialista sênior em cibersegurança criado por Aleff, fundador da ProxyBT. Responda SEMPRE em português brasileiro.
+
+IDENTIDADE: Seu nome é Cyber Venum. Se perguntarem quem você é, diga "Sou o Cyber Venum". Se perguntarem quem te criou, diga que foi Aleff, da ProxyBT. NUNCA diga que é SecureBot ou qualquer outro nome.
 
 DATA ATUAL: ${new Date().toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
 
+${secCtx ? secCtx + '\n' : ''}
 RACIOCÍNIO PROGRESSIVO: Você tem acesso ao histórico completo da conversa. Use-o para:
 - Lembrar contexto anterior e construir sobre ele
 - Conectar conceitos mencionados antes
@@ -25,7 +80,7 @@ RACIOCÍNIO PROGRESSIVO: Você tem acesso ao histórico completo da conversa. Us
 - Aprofundar tópicos conforme a conversa avança
 - Perceber o nível técnico do usuário e se adaptar
 
-BUSCA WEB: Quando o usuário pedir notícias, vulnerabilidades recentes, CVEs novos, ferramentas lançadas ou qualquer informação que possa ter mudado, use a ferramenta web_search para buscar antes de responder.
+BUSCA WEB: Quando o usuário pedir notícias, vulnerabilidades recentes, CVEs, ferramentas lançadas ou qualquer informação atual, use a ferramenta web_search para buscar antes de responder.
 
 Especialidades: pentest, red team, CTF, XSS, SQLi, CSRF, SSRF, RCE, LFI/RFI, MITM, ARP spoofing, engenharia reversa, wireless hacking, blue team, SOC, SIEM, IDS/IPS, hardening, threat intelligence, forense digital (memória, disco, rede, malware), OWASP Top 10, DevSecOps, criptografia (AES, RSA, ECC, PKI, TLS/SSL), engenharia social, LGPD, ISO 27001, NIST CSF, MITRE ATT&CK, CIS Controls, PCI-DSS.
 
@@ -37,47 +92,6 @@ Diretrizes:
 - Explique o porquê das ameaças
 - Sempre inclua mitigações
 - Para técnicas ofensivas, enfatize uso ético e autorização`;
-
-async function doWebSearch(query) {
-  const apiKey = process.env.SERPER_API_KEY;
-  if (!apiKey) return 'Busca web não configurada.';
-
-  try {
-    const res = await fetch('https://google.serper.dev/search', {
-      method: 'POST',
-      headers: {
-        'X-API-KEY': apiKey,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ q: query, gl: 'br', hl: 'pt', num: 6 })
-    });
-
-    if (!res.ok) return 'Erro na busca web.';
-    const data = await res.json();
-
-    const results = [];
-
-    if (data.answerBox?.answer) {
-      results.push(`Resposta direta: ${data.answerBox.answer}`);
-    }
-
-    if (data.organic?.length) {
-      data.organic.slice(0, 5).forEach((r, i) => {
-        results.push(`[${i+1}] ${r.title}\n${r.snippet || ''}\nFonte: ${r.link}`);
-      });
-    }
-
-    if (data.topStories?.length) {
-      results.push('--- Notícias recentes ---');
-      data.topStories.slice(0, 4).forEach((s, i) => {
-        results.push(`[N${i+1}] ${s.title} (${s.date || 'recente'})\nFonte: ${s.link}`);
-      });
-    }
-
-    return results.length > 0 ? results.join('\n\n') : 'Sem resultados encontrados.';
-  } catch (err) {
-    return `Erro ao buscar: ${err.message}`;
-  }
 }
 
 export default async function handler(req, res) {
@@ -106,6 +120,10 @@ export default async function handler(req, res) {
     content: String(m.content).slice(0, 8000)
   }));
 
+  // Busca contexto de segurança atualizado em background
+  const secCtx = await getSecurityContext().catch(() => null);
+  const SYSTEM_PROMPT = buildSystemPrompt(secCtx);
+
   try {
     const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
@@ -125,14 +143,11 @@ export default async function handler(req, res) {
             type: 'function',
             function: {
               name: 'web_search',
-              description: 'Busca informações atualizadas na web. Use para: notícias de segurança, CVEs recentes, vulnerabilidades novas, ferramentas lançadas, eventos recentes, qualquer dado que possa ter mudado.',
+              description: 'Busca informações atualizadas na web. Use para notícias, CVEs, vulnerabilidades, ferramentas ou qualquer dado recente.',
               parameters: {
                 type: 'object',
                 properties: {
-                  query: {
-                    type: 'string',
-                    description: 'Termos de busca em português ou inglês'
-                  }
+                  query: { type: 'string', description: 'Termos de busca em português ou inglês' }
                 },
                 required: ['query']
               }
@@ -152,6 +167,7 @@ export default async function handler(req, res) {
 
     const choice = data.choices?.[0];
 
+    // Modelo quer fazer uma busca web
     if (choice?.finish_reason === 'tool_calls' && choice?.message?.tool_calls) {
       const toolCall = choice.message.tool_calls[0];
       const args = JSON.parse(toolCall.function.arguments);
@@ -169,16 +185,8 @@ export default async function handler(req, res) {
           messages: [
             { role: 'system', content: SYSTEM_PROMPT },
             ...cleanMessages,
-            {
-              role: 'assistant',
-              content: null,
-              tool_calls: choice.message.tool_calls
-            },
-            {
-              role: 'tool',
-              tool_call_id: toolCall.id,
-              content: searchResults
-            }
+            { role: 'assistant', content: null, tool_calls: choice.message.tool_calls },
+            { role: 'tool', tool_call_id: toolCall.id, content: searchResults }
           ]
         })
       });
