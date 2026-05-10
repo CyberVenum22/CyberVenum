@@ -1,4 +1,3 @@
-cat > /mnt/user-data/outputs/api-chat-v4.js << 'EOF'
 const RATE_LIMIT = {};
 const MAX_REQUESTS = 20;
 const WINDOW_MS = 60 * 1000;
