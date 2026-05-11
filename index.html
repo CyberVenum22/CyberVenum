@@ -8,10 +8,12 @@
 <link rel="icon" type="image/png+xml" href="/favicon.png"/>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet"/>
 <style>
-:root{--bg:#07040f;--surface:#0f0a1a;--surface2:#160f24;--border:rgba(140,80,255,0.18);--border2:rgba(140,80,255,0.35);--accent:#8c50ff;--accent2:#b980ff;--text:#ede0ff;--muted:#6a547a;--danger:#ff4565;--warn:#c97aff;--mono:'JetBrains Mono',monospace;--sans:'Syne',sans-serif;}
+:root{--bg:#07040f;--surface:#0f0a1a;--surface2:#160f24;--border:rgba(140,80,255,0.18);--border2:rgba(140,80,255,0.35);--accent:#8c50ff;--accent2:#b980ff;--text:#ede0ff;--muted:#6a547a;--danger:#ff4565;--warn:#c97aff;--ok:#50ff8c;--mono:'JetBrains Mono',monospace;--sans:'Syne',sans-serif;}
 *{box-sizing:border-box;margin:0;padding:0;}html,body{height:100%;}
 body{background:var(--bg);color:var(--text);font-family:var(--sans);display:flex;flex-direction:column;height:100vh;overflow:hidden;}
 body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(140,80,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(140,80,255,0.04) 1px,transparent 1px);background-size:32px 32px;pointer-events:none;z-index:0;}
+
+/* LOGIN */
 #login-screen{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;align-items:center;justify-content:center;}
 #login-screen::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(140,80,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(140,80,255,0.04) 1px,transparent 1px);background-size:32px 32px;pointer-events:none;}
 .login-box{position:relative;z-index:1;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:40px 36px;width:100%;max-width:380px;display:flex;flex-direction:column;gap:20px;}
@@ -26,6 +28,8 @@ body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(
 .login-btn:hover{opacity:.85;}.login-btn:disabled{opacity:.5;cursor:not-allowed;}
 #login-error{font-size:12px;color:var(--danger);font-family:var(--mono);text-align:center;min-height:16px;}
 .login-footer{font-size:11px;color:var(--muted);font-family:var(--mono);text-align:center;}
+
+/* HEADER */
 header{position:relative;z-index:10;padding:10px 20px;border-bottom:1px solid var(--border);background:rgba(7,4,15,.95);backdrop-filter:blur(10px);display:flex;align-items:center;gap:12px;flex-shrink:0;}
 .logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#2d0060,#8c50ff);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;border:1px solid var(--border2);}
 .header-info h1{font-size:14px;font-weight:800;letter-spacing:.05em;color:var(--accent2);text-transform:uppercase;}
@@ -37,16 +41,19 @@ header{position:relative;z-index:10;padding:10px 20px;border-bottom:1px solid va
 .header-btn{font-size:11px;font-family:var(--mono);color:var(--muted);background:transparent;border:1px solid var(--border);border-radius:4px;padding:4px 10px;cursor:pointer;transition:all .15s;}
 .header-btn:hover{color:var(--accent);border-color:var(--accent);}
 .header-btn.danger:hover{color:var(--danger);border-color:var(--danger);}
+#cve-bell{position:relative;}
+#cve-count{position:absolute;top:-4px;right:-4px;width:14px;height:14px;background:var(--danger);border-radius:50%;font-size:8px;display:none;align-items:center;justify-content:center;color:#fff;font-family:var(--mono);}
+
+/* LAYOUT */
 .app-layout{position:relative;z-index:1;flex:1;display:flex;overflow:hidden;}
-#sidebar{width:230px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;background:rgba(7,4,15,.8);transition:width .2s;overflow:hidden;}
+#sidebar{width:220px;flex-shrink:0;border-right:1px solid var(--border);display:flex;flex-direction:column;background:rgba(7,4,15,.8);transition:width .2s;overflow:hidden;}
 #sidebar.collapsed{width:0;}
 .sidebar-header{padding:10px 12px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .sidebar-title{font-size:11px;font-family:var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
 .new-chat-btn{font-size:11px;font-family:var(--mono);color:var(--accent);background:transparent;border:1px solid var(--border2);border-radius:4px;padding:3px 8px;cursor:pointer;transition:all .15s;white-space:nowrap;}
 .new-chat-btn:hover{background:rgba(140,80,255,.12);}
 #conv-list{flex:1;overflow-y:auto;padding:6px;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
-#conv-list::-webkit-scrollbar{width:3px;}
-#conv-list::-webkit-scrollbar-thumb{background:var(--border2);}
+#conv-list::-webkit-scrollbar{width:3px;}#conv-list::-webkit-scrollbar-thumb{background:var(--border2);}
 .conv-item{padding:7px 9px;border-radius:6px;cursor:pointer;transition:all .15s;border:1px solid transparent;margin-bottom:3px;}
 .conv-item:hover{background:var(--surface);border-color:var(--border);}
 .conv-item.active{background:var(--surface2);border-color:var(--border2);}
@@ -58,29 +65,34 @@ header{position:relative;z-index:10;padding:10px 20px;border-bottom:1px solid va
 .conv-del-btn:hover{color:var(--danger);border-color:var(--danger);}
 .sidebar-empty{padding:14px;text-align:center;font-size:11px;color:var(--muted);font-family:var(--mono);}
 #main-area{flex:1;display:flex;flex-direction:column;overflow:hidden;}
-main{flex:1;display:flex;flex-direction:column;max-width:980px;width:100%;margin:0 auto;padding:0 14px;overflow:hidden;}
-#tabs{display:flex;gap:3px;padding:8px 0 0;flex-shrink:0;border-bottom:1px solid var(--border);}
-.tab{font-size:11px;font-family:var(--mono);padding:5px 10px;border:1px solid transparent;border-bottom:none;border-radius:6px 6px 0 0;cursor:pointer;color:var(--muted);background:transparent;transition:all .15s;}
+main{flex:1;display:flex;flex-direction:column;max-width:1100px;width:100%;margin:0 auto;padding:0 14px;overflow:hidden;}
+
+/* TABS */
+#tabs{display:flex;gap:2px;padding:6px 0 0;flex-shrink:0;border-bottom:1px solid var(--border);overflow-x:auto;}
+.tab{font-size:11px;font-family:var(--mono);padding:5px 10px;border:1px solid transparent;border-bottom:none;border-radius:6px 6px 0 0;cursor:pointer;color:var(--muted);background:transparent;transition:all .15s;white-space:nowrap;}
 .tab:hover{color:var(--accent);}
 .tab.active{color:var(--accent2);border-color:var(--border2);background:var(--surface);border-bottom:1px solid var(--surface);margin-bottom:-1px;}
 .panel{display:none;flex:1;flex-direction:column;overflow:hidden;}
 .panel.active{display:flex;}
-#modes-bar{display:flex;gap:4px;padding:7px 0 0;flex-shrink:0;flex-wrap:wrap;border-bottom:1px solid var(--border);padding-bottom:7px;}
-.mode-group{display:flex;gap:3px;flex-wrap:wrap;}
-.mode-sep{width:1px;background:var(--border);margin:0 4px;align-self:stretch;}
+
+/* CHAT MODES */
+#modes-bar{display:flex;gap:3px;padding:6px 0;flex-shrink:0;flex-wrap:wrap;border-bottom:1px solid var(--border);}
 .mode-btn{font-size:10px;font-family:var(--mono);padding:3px 8px;border:1px solid var(--border);border-radius:20px;cursor:pointer;color:var(--muted);background:transparent;transition:all .15s;white-space:nowrap;}
 .mode-btn:hover{color:var(--accent);border-color:var(--accent);}
 .mode-btn.active{color:#fff;background:var(--accent);border-color:var(--accent);}
-.mode-btn.danger-mode{border-color:rgba(255,69,101,.3);color:rgba(255,69,101,.7);}
-.mode-btn.danger-mode:hover,.mode-btn.danger-mode.active{color:#fff;background:rgba(255,69,101,.8);border-color:var(--danger);}
-#chips{display:flex;flex-wrap:wrap;gap:4px;padding:6px 0 5px;flex-shrink:0;}
+.mode-btn.red{border-color:rgba(255,69,101,.3);color:rgba(255,69,101,.7);}
+.mode-btn.red:hover,.mode-btn.red.active{color:#fff;background:rgba(200,40,70,.8);border-color:var(--danger);}
+.mode-sep{width:1px;background:var(--border);margin:0 3px;}
+
+/* CHIPS */
+#chips{display:flex;flex-wrap:wrap;gap:4px;padding:5px 0;flex-shrink:0;}
 .chip{font-size:10px;font-family:var(--mono);padding:3px 8px;border:1px solid var(--border2);border-radius:4px;cursor:pointer;color:var(--muted);background:transparent;transition:all .15s;}
 .chip:hover{color:var(--accent);border-color:var(--accent);background:rgba(140,80,255,.08);}
+
+/* CHAT */
 #chat-box{flex:1;overflow-y:auto;padding:8px 0;display:flex;flex-direction:column;gap:12px;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
-#chat-box::-webkit-scrollbar{width:4px;}
-#chat-box::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
-.msg{display:flex;gap:10px;}
-.msg.user{flex-direction:row-reverse;}
+#chat-box::-webkit-scrollbar{width:4px;}#chat-box::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+.msg{display:flex;gap:10px;}.msg.user{flex-direction:row-reverse;}
 .msg-avatar{width:28px;height:28px;border-radius:6px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:13px;border:1px solid var(--border);}
 .msg.agent .msg-avatar{background:rgba(140,80,255,.1);}
 .msg.user .msg-avatar{background:rgba(255,255,255,.05);}
@@ -88,11 +100,11 @@ main{flex:1;display:flex;flex-direction:column;max-width:980px;width:100%;margin
 .msg.agent .bubble{background:var(--surface);border:1px solid var(--border);color:var(--text);}
 .msg.user .bubble{background:rgba(140,80,255,.15);border:1px solid var(--border2);color:var(--accent2);border-radius:10px 2px 10px 10px;font-family:var(--mono);font-size:13px;}
 .bubble pre{background:#07040f;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:4px;padding:10px 12px;margin-top:8px;font-family:var(--mono);font-size:12px;overflow-x:auto;white-space:pre-wrap;color:#d4a0ff;position:relative;}
-.copy-btn{position:absolute;top:6px;right:6px;font-size:10px;font-family:var(--mono);color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:2px 6px;cursor:pointer;transition:all .15s;}
-.copy-btn:hover{color:var(--accent);border-color:var(--accent);}
+.copy-btn{position:absolute;top:5px;right:5px;font-size:9px;font-family:var(--mono);color:var(--muted);background:var(--surface2);border:1px solid var(--border);border-radius:3px;padding:2px 5px;cursor:pointer;transition:all .15s;}
+.copy-btn:hover{color:var(--accent);}
 .bubble code{font-family:var(--mono);font-size:12px;background:rgba(140,80,255,.12);border:1px solid var(--border);padding:1px 5px;border-radius:3px;color:var(--accent2);}
 .bubble strong{color:var(--accent2);font-weight:600;}
-.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-family:var(--mono);border-radius:3px;padding:2px 7px;margin-bottom:5px;margin-right:4px;}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-family:var(--mono);border-radius:3px;padding:2px 7px;margin-bottom:4px;margin-right:3px;}
 .badge.search{color:#c97aff;border:1px solid rgba(201,122,255,.3);}
 .badge.mode{color:var(--accent);border:1px solid var(--border2);}
 .badge.payload{color:#ff4565;border:1px solid rgba(255,69,101,.3);}
@@ -100,43 +112,157 @@ main{flex:1;display:flex;flex-direction:column;max-width:980px;width:100%;margin
 .typing span{width:6px;height:6px;border-radius:50%;background:var(--accent);display:block;animation:blink 1.2s infinite;}
 .typing span:nth-child(2){animation-delay:.2s;}.typing span:nth-child(3){animation-delay:.4s;}
 @keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
-#input-area{flex-shrink:0;padding:7px 0 10px;border-top:1px solid var(--border);}
-.input-top{display:flex;gap:5px;align-items:center;margin-bottom:5px;flex-wrap:wrap;}
-.file-btn,.voice-btn,.export-btn,.translate-btn{font-size:10px;font-family:var(--mono);color:var(--muted);background:transparent;border:1px solid var(--border);border-radius:4px;padding:3px 8px;cursor:pointer;transition:all .15s;}
-.file-btn:hover,.translate-btn:hover{color:var(--accent);border-color:var(--accent);}
-.voice-btn:hover{color:var(--warn);border-color:var(--warn);}
-.voice-btn.recording{color:var(--danger);border-color:var(--danger);animation:blink 1s infinite;}
-.export-btn:hover{color:var(--accent2);border-color:var(--accent2);}
+
+/* INPUT */
+#input-area{flex-shrink:0;padding:6px 0 10px;border-top:1px solid var(--border);}
+.input-top{display:flex;gap:4px;align-items:center;margin-bottom:5px;flex-wrap:wrap;}
+.itbtn{font-size:10px;font-family:var(--mono);color:var(--muted);background:transparent;border:1px solid var(--border);border-radius:4px;padding:3px 7px;cursor:pointer;transition:all .15s;}
+.itbtn:hover{color:var(--accent);border-color:var(--accent);}
+.itbtn.rec{color:var(--danger);border-color:var(--danger);animation:blink 1s infinite;}
 #file-input{display:none;}
-#file-badge{font-size:10px;font-family:var(--mono);color:var(--accent);background:rgba(140,80,255,.1);border:1px solid var(--border2);border-radius:3px;padding:2px 8px;display:none;}
+#file-badge{font-size:10px;font-family:var(--mono);color:var(--accent);background:rgba(140,80,255,.1);border:1px solid var(--border2);border-radius:3px;padding:2px 7px;display:none;}
 #input-row{display:flex;gap:8px;align-items:flex-end;}
-#user-input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:13px;padding:10px 12px;resize:none;outline:none;min-height:42px;max-height:130px;transition:border-color .15s;line-height:1.5;}
+#user-input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:13px;padding:9px 12px;resize:none;outline:none;min-height:40px;max-height:120px;transition:border-color .15s;line-height:1.5;}
 #user-input:focus{border-color:var(--accent);}
 #user-input::placeholder{color:var(--muted);}
-#send-btn{padding:10px 16px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-family:var(--sans);font-size:13px;font-weight:800;cursor:pointer;transition:opacity .15s;white-space:nowrap;letter-spacing:.05em;text-transform:uppercase;}
+#send-btn{padding:9px 15px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-family:var(--sans);font-size:13px;font-weight:800;cursor:pointer;transition:opacity .15s;white-space:nowrap;letter-spacing:.05em;text-transform:uppercase;}
 #send-btn:hover{opacity:.85;}#send-btn:disabled{opacity:.4;cursor:not-allowed;}
 #hint{font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:4px;}
-.ref-panel{flex:1;overflow-y:auto;padding:12px 0;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
-.ref-section{margin-bottom:18px;}
-.ref-section h3{font-size:11px;font-family:var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid var(--border);}
-.ref-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:6px;}
-.ref-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:9px 11px;cursor:pointer;transition:all .15s;}
-.ref-card:hover{border-color:var(--border2);background:var(--surface2);}
-.ref-card h4{font-size:12px;font-weight:600;color:var(--accent2);margin-bottom:2px;}
-.ref-card p{font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.4;}
+
+/* GENERIC PANEL */
+.scroll-panel{flex:1;overflow-y:auto;padding:12px 0;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
+.panel-section{margin-bottom:18px;}
+.panel-section h3{font-size:11px;font-family:var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:.1em;margin-bottom:7px;padding-bottom:4px;border-bottom:1px solid var(--border);}
+.grid2{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:6px;}
+.grid3{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:8px;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
+.card.clickable{cursor:pointer;transition:all .15s;}
+.card.clickable:hover{border-color:var(--border2);background:var(--surface2);}
+.card h4{font-size:12px;font-weight:600;color:var(--accent2);margin-bottom:3px;}
+.card p{font-size:10px;color:var(--muted);font-family:var(--mono);line-height:1.4;}
+.tag{display:inline-block;font-size:10px;font-family:var(--mono);padding:2px 5px;border-radius:3px;margin-top:4px;margin-right:2px;background:rgba(140,80,255,.12);color:var(--accent);border:1px solid var(--border2);}
+
+/* SCANNER */
+.scanner-wrap{display:flex;flex-direction:column;gap:12px;}
+.scan-input-row{display:flex;gap:8px;}
+.scan-input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:13px;padding:10px 14px;outline:none;transition:border-color .15s;}
+.scan-input:focus{border-color:var(--accent);}
+.scan-input::placeholder{color:var(--muted);}
+.scan-btn{padding:10px 18px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-family:var(--sans);font-size:13px;font-weight:800;cursor:pointer;transition:opacity .15s;white-space:nowrap;}
+.scan-btn:hover{opacity:.85;}.scan-btn:disabled{opacity:.4;cursor:not-allowed;}
+.score-card{background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:20px;display:flex;align-items:center;gap:20px;}
+.score-circle{width:80px;height:80px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;border:3px solid var(--accent2);}
+.score-num{font-size:24px;font-weight:800;color:var(--accent2);font-family:var(--mono);}
+.score-grade{font-size:14px;color:var(--muted);font-family:var(--mono);}
+.score-info h3{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px;}
+.score-info p{font-size:11px;color:var(--muted);font-family:var(--mono);}
+.checks-list{display:flex;flex-direction:column;gap:6px;}
+.check-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;display:flex;align-items:flex-start;gap:12px;}
+.check-icon{font-size:16px;flex-shrink:0;margin-top:1px;}
+.check-info{flex:1;}
+.check-name{font-size:12px;font-weight:600;color:var(--text);margin-bottom:2px;}
+.check-detail{font-size:11px;color:var(--muted);font-family:var(--mono);}
+.check-impact{font-size:10px;color:var(--warn);font-family:var(--mono);margin-top:2px;}
+.sev-badge{font-size:9px;font-family:var(--mono);padding:2px 6px;border-radius:3px;flex-shrink:0;}
+.sev-critical{background:rgba(255,50,50,.15);color:#ff5555;border:1px solid rgba(255,50,50,.3);}
+.sev-high{background:rgba(255,120,50,.15);color:#ff7833;border:1px solid rgba(255,120,50,.3);}
+.sev-medium{background:rgba(255,200,50,.15);color:#ffc832;border:1px solid rgba(255,200,50,.3);}
+.sev-low{background:rgba(80,200,140,.15);color:#50c88c;border:1px solid rgba(80,200,140,.3);}
+.sev-info{background:rgba(140,80,255,.15);color:var(--accent);border:1px solid var(--border2);}
+.scan-loading{text-align:center;font-size:12px;font-family:var(--mono);color:var(--muted);padding:30px;animation:blink 1.5s infinite;}
+
+/* REPUTATION */
+.rep-wrap{display:flex;flex-direction:column;gap:12px;}
+.rep-sources{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:10px;}
+.rep-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px;}
+.rep-card h4{font-size:12px;font-family:var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.rep-row{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-family:var(--mono);padding:3px 0;border-bottom:1px solid rgba(140,80,255,.06);}
+.rep-row:last-child{border-bottom:none;}
+.rep-key{color:var(--muted);}
+.rep-val{color:var(--text);font-weight:500;}
+.rep-val.danger{color:var(--danger);}
+.rep-val.ok{color:var(--ok);}
+
+/* CVE PANEL */
+.cve-list{display:flex;flex-direction:column;gap:8px;}
+.cve-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+.cve-header{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+.cve-id{font-size:12px;font-family:var(--mono);color:var(--accent2);font-weight:700;}
+.cve-score{font-size:11px;font-family:var(--mono);padding:2px 7px;border-radius:3px;background:rgba(255,50,50,.15);color:#ff5555;border:1px solid rgba(255,50,50,.3);}
+.cve-date{font-size:10px;color:var(--muted);font-family:var(--mono);margin-left:auto;}
+.cve-desc{font-size:12px;color:var(--text);line-height:1.5;font-family:var(--mono);}
+.cve-refs{margin-top:6px;display:flex;flex-wrap:wrap;gap:4px;}
+.cve-ref{font-size:10px;color:var(--accent);font-family:var(--mono);text-decoration:none;}
+.cve-ref:hover{text-decoration:underline;}
+.cve-refresh{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.cve-refresh span{font-size:11px;font-family:var(--mono);color:var(--muted);}
+
+/* LAB GENERATOR */
+.lab-wrap{display:flex;flex-direction:column;gap:12px;}
+.lab-topics{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:4px;}
+.lab-topic{font-size:11px;font-family:var(--mono);padding:4px 10px;border:1px solid var(--border2);border-radius:4px;cursor:pointer;color:var(--muted);transition:all .15s;}
+.lab-topic:hover{color:var(--accent);border-color:var(--accent);}
+.lab-result{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:16px;}
+.lab-result h3{font-size:14px;font-weight:700;color:var(--accent2);margin-bottom:4px;}
+.lab-meta{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.lab-badge{font-size:10px;font-family:var(--mono);padding:2px 8px;border-radius:3px;border:1px solid var(--border2);color:var(--muted);}
+.lab-section{margin-bottom:12px;}
+.lab-section h4{font-size:11px;font-family:var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;}
+.lab-compose{background:#07040f;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:4px;padding:12px;font-family:var(--mono);font-size:11px;color:#d4a0ff;white-space:pre-wrap;overflow-x:auto;position:relative;}
+.lab-list{list-style:none;display:flex;flex-direction:column;gap:3px;}
+.lab-list li{font-size:12px;font-family:var(--mono);color:var(--text);padding:3px 0;border-bottom:1px solid rgba(140,80,255,.06);}
+.lab-list li::before{content:'→ ';color:var(--accent);}
+
+/* MULTIPLAYER */
+.mp-wrap{display:flex;gap:12px;height:100%;}
+.mp-sidebar{width:220px;flex-shrink:0;display:flex;flex-direction:column;gap:8px;}
+.mp-main{flex:1;display:flex;flex-direction:column;gap:8px;}
+.mp-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px;}
+.mp-card h4{font-size:11px;font-family:var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;}
+.mp-input{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--mono);font-size:12px;padding:7px 10px;outline:none;margin-bottom:6px;}
+.mp-input:focus{border-color:var(--accent);}
+.mp-btn{width:100%;padding:7px;background:var(--accent);color:#fff;border:none;border-radius:4px;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;transition:opacity .15s;text-transform:uppercase;letter-spacing:.04em;}
+.mp-btn:hover{opacity:.85;}
+.mp-btn.outline{background:transparent;border:1px solid var(--border2);color:var(--muted);}
+.mp-btn.outline:hover{color:var(--accent);border-color:var(--accent);}
+.room-list{display:flex;flex-direction:column;gap:4px;max-height:200px;overflow-y:auto;}
+.room-item{background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:7px 10px;cursor:pointer;transition:all .15s;}
+.room-item:hover{border-color:var(--border2);}
+.room-item-name{font-size:11px;font-family:var(--mono);color:var(--text);}
+.room-item-meta{font-size:10px;color:var(--muted);font-family:var(--mono);}
+.mp-chat{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:4px;padding:8px;min-height:200px;scrollbar-width:thin;}
+.mp-msg{font-size:11px;font-family:var(--mono);padding:4px 8px;border-radius:4px;line-height:1.5;}
+.mp-msg.system{color:var(--muted);font-style:italic;background:rgba(140,80,255,.04);}
+.mp-msg.chat{color:var(--text);}
+.mp-msg .mp-user{color:var(--accent2);font-weight:700;}
+.mp-input-row{display:flex;gap:6px;}
+.mp-text{flex:1;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--mono);font-size:12px;padding:7px 10px;outline:none;}
+.mp-text:focus{border-color:var(--accent);}
+.mp-send{padding:7px 12px;background:var(--accent);color:#fff;border:none;border-radius:4px;font-family:var(--mono);font-size:11px;cursor:pointer;}
+.players-list{display:flex;flex-direction:column;gap:4px;}
+.player-item{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-family:var(--mono);padding:4px 0;border-bottom:1px solid rgba(140,80,255,.06);}
+.player-name{color:var(--text);}
+.player-pts{color:var(--accent2);font-weight:700;}
+.flag-row{display:flex;gap:6px;margin-top:8px;}
+.flag-input{flex:1;background:var(--bg);border:1px solid var(--border2);border-radius:4px;color:var(--text);font-family:var(--mono);font-size:12px;padding:7px 10px;outline:none;}
+.flag-btn{padding:7px 12px;background:rgba(255,69,101,.8);color:#fff;border:none;border-radius:4px;font-family:var(--mono);font-size:11px;font-weight:700;cursor:pointer;}
+.challenge-box{background:var(--surface2);border:1px solid var(--border2);border-radius:6px;padding:10px 12px;font-size:12px;font-family:var(--mono);color:var(--text);line-height:1.6;}
+
+/* TERMINAL */
+#terminal-wrap{flex:1;display:flex;flex-direction:column;}
+#terminal-box{flex:1;background:#07040f;border:1px solid var(--border);border-radius:8px;padding:12px;font-family:var(--mono);font-size:12px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;scrollbar-width:thin;}
+.term-line{color:#d4a0ff;line-height:1.5;}
+.term-line.out{color:#b0b0b0;}
+.term-line.err{color:var(--danger);}
+.term-line.ok{color:var(--ok);}
+.term-line.info{color:var(--accent2);}
+#terminal-input-row{display:flex;align-items:center;gap:8px;margin-top:8px;}
+.term-prompt{font-family:var(--mono);font-size:12px;color:var(--accent2);flex-shrink:0;}
+#term-input{flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:var(--mono);font-size:12px;}
+#term-input::placeholder{color:var(--muted);}
+
+/* TOOLS */
 .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px;padding:10px 0;}
-.tool-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 12px;}
-.tool-card h4{font-size:12px;font-weight:600;color:var(--accent2);margin-bottom:4px;}
-.tool-card p{font-size:11px;color:var(--muted);font-family:var(--mono);line-height:1.5;}
-.tool-tag{display:inline-block;font-size:10px;font-family:var(--mono);padding:2px 5px;border-radius:3px;margin-top:4px;margin-right:2px;background:rgba(140,80,255,.12);color:var(--accent);border:1px solid var(--border2);}
-#dashboard-panel{flex:1;overflow-y:auto;padding:10px 0;scrollbar-width:thin;}
-.dash-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;}
-.dash-card h3{font-size:11px;font-family:var(--mono);color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
-.dash-refresh{font-size:10px;font-family:var(--mono);color:var(--muted);cursor:pointer;border:1px solid var(--border);border-radius:3px;padding:2px 6px;transition:all .15s;}
-.dash-refresh:hover{color:var(--accent);border-color:var(--accent);}
-.dash-content{font-size:12px;font-family:var(--mono);color:var(--text);line-height:1.7;white-space:pre-wrap;}
-.dash-loading{font-size:11px;font-family:var(--mono);color:var(--muted);text-align:center;padding:30px;}
-.dash-time{font-size:10px;color:var(--muted);font-family:var(--mono);margin-top:8px;}
 </style>
 </head>
 <body>
@@ -157,8 +283,9 @@ main{flex:1;display:flex;flex-direction:column;max-width:980px;width:100%;margin
 <header>
   <button class="header-btn" onclick="toggleSidebar()">☰</button>
   <div class="logo">🕷️</div>
-  <div class="header-info"><h1>Cyber Venum</h1><p>pentest · payload · red team · forense · osint · blue team</p></div>
+  <div class="header-info"><h1>Cyber Venum</h1><p>pentest · payload · red team · forense · scanner · multiplayer</p></div>
   <div class="header-right">
+    <button class="header-btn" id="cve-bell" onclick="switchTab('cve');loadCVEs()" title="CVEs críticos">🔔<span id="cve-count"></span></button>
     <div class="status"><div class="dot"></div><span id="mode-indicator">CHAT</span></div>
     <button class="header-btn danger" onclick="doLogout()">sair</button>
   </div>
@@ -177,60 +304,54 @@ main{flex:1;display:flex;flex-direction:column;max-width:980px;width:100%;margin
     <main>
       <div id="tabs">
         <div class="tab active" onclick="switchTab('chat')">💬 Chat</div>
+        <div class="tab" onclick="switchTab('scanner')">🔍 Scanner</div>
+        <div class="tab" onclick="switchTab('reputation')">🛡️ Reputação</div>
+        <div class="tab" onclick="switchTab('cve');loadCVEs()">🚨 CVEs Live</div>
+        <div class="tab" onclick="switchTab('lab')">🧪 Laboratório</div>
+        <div class="tab" onclick="switchTab('terminal')">💻 Terminal</div>
+        <div class="tab" onclick="switchTab('multiplayer');loadRooms()">🎮 Multiplayer</div>
         <div class="tab" onclick="switchTab('ref')">📚 Referência</div>
         <div class="tab" onclick="switchTab('tools')">🔧 Ferramentas</div>
-        <div class="tab" onclick="switchTab('dashboard');loadDashboard()">📡 Ameaças</div>
       </div>
 
+      <!-- CHAT -->
       <div class="panel active" id="panel-chat">
         <div id="modes-bar">
-          <div class="mode-group">
-            <button class="mode-btn active" onclick="setMode('chat','CHAT')" data-mode="chat">💬 Chat</button>
-            <button class="mode-btn danger-mode" onclick="setMode('payload','PAYLOAD')" data-mode="payload">💉 Payloads</button>
-            <button class="mode-btn danger-mode" onclick="setMode('redteam','RED TEAM')" data-mode="redteam">🎯 Red Team</button>
-          </div>
+          <button class="mode-btn active" onclick="setMode('chat','CHAT')" data-mode="chat">💬 Chat</button>
+          <button class="mode-btn red" onclick="setMode('payload','PAYLOAD')" data-mode="payload">💉 Payloads</button>
+          <button class="mode-btn red" onclick="setMode('redteam','RED TEAM')" data-mode="redteam">🎯 Red Team</button>
           <div class="mode-sep"></div>
-          <div class="mode-group">
-            <button class="mode-btn" onclick="setMode('pentest','PENTEST')" data-mode="pentest">📋 Relatório</button>
-            <button class="mode-btn" onclick="setMode('osint','OSINT')" data-mode="osint">🔎 OSINT</button>
-            <button class="mode-btn" onclick="setMode('incident','INCIDENT')" data-mode="incident">🚨 Incidente</button>
-            <button class="mode-btn" onclick="setMode('phishing','PHISHING')" data-mode="phishing">🎣 Phishing</button>
-            <button class="mode-btn" onclick="setMode('timeline','TIMELINE')" data-mode="timeline">⏱️ Timeline</button>
-          </div>
+          <button class="mode-btn" onclick="setMode('pentest','PENTEST')" data-mode="pentest">📋 Relatório</button>
+          <button class="mode-btn" onclick="setMode('osint','OSINT')" data-mode="osint">🔎 OSINT</button>
+          <button class="mode-btn" onclick="setMode('incident','INCIDENT')" data-mode="incident">🚨 Incidente</button>
+          <button class="mode-btn" onclick="setMode('phishing','PHISHING')" data-mode="phishing">🎣 Phishing</button>
+          <button class="mode-btn" onclick="setMode('timeline','TIMELINE')" data-mode="timeline">⏱️ Timeline</button>
           <div class="mode-sep"></div>
-          <div class="mode-group">
-            <button class="mode-btn" onclick="setMode('quiz','QUIZ')" data-mode="quiz">🎓 Quiz</button>
-            <button class="mode-btn" onclick="setMode('ctf','CTF')" data-mode="ctf">🚩 CTF</button>
-            <button class="mode-btn" onclick="setMode('flashcard','FLASHCARD')" data-mode="flashcard">🃏 Flashcard</button>
-          </div>
+          <button class="mode-btn" onclick="setMode('quiz','QUIZ')" data-mode="quiz">🎓 Quiz</button>
+          <button class="mode-btn" onclick="setMode('ctf','CTF')" data-mode="ctf">🚩 CTF</button>
+          <button class="mode-btn" onclick="setMode('flashcard','FLASH')" data-mode="flashcard">🃏 Flashcard</button>
           <div class="mode-sep"></div>
-          <div class="mode-group">
-            <button class="mode-btn" onclick="setMode('codereview','CODE')" data-mode="codereview">🔬 Code Review</button>
-            <button class="mode-btn" onclick="setMode('fileanalysis','FORENSE')" data-mode="fileanalysis">🗂️ Arquivo</button>
-            <button class="mode-btn" onclick="setMode('decoder','DECODER')" data-mode="decoder">🔐 Decoder</button>
-            <button class="mode-btn" onclick="setMode('password','SENHA')" data-mode="password">🔑 Senha</button>
-            <button class="mode-btn" onclick="setMode('cvss','CVSS')" data-mode="cvss">📊 CVSS</button>
-          </div>
+          <button class="mode-btn" onclick="setMode('codereview','CODE')" data-mode="codereview">🔬 Code Review</button>
+          <button class="mode-btn" onclick="setMode('fileanalysis','FORENSE')" data-mode="fileanalysis">🗂️ Arquivo</button>
+          <button class="mode-btn" onclick="setMode('decoder','DECODER')" data-mode="decoder">🔐 Decoder</button>
+          <button class="mode-btn" onclick="setMode('password','SENHA')" data-mode="password">🔑 Senha</button>
+          <button class="mode-btn" onclick="setMode('cvss','CVSS')" data-mode="cvss">📊 CVSS</button>
           <div class="mode-sep"></div>
-          <div class="mode-group">
-            <button class="mode-btn" onclick="setMode('wordlist','WORDLIST')" data-mode="wordlist">📝 Wordlist</button>
-            <button class="mode-btn" onclick="setMode('checklist','CHECKLIST')" data-mode="checklist">✅ Checklist</button>
-            <button class="mode-btn" onclick="setMode('attack_surface','ATAQUE')" data-mode="attack_surface">🗺️ Superfície</button>
-            <button class="mode-btn" onclick="setMode('policy','POLÍTICA')" data-mode="policy">📄 Política</button>
-          </div>
+          <button class="mode-btn" onclick="setMode('wordlist','WORDLIST')" data-mode="wordlist">📝 Wordlist</button>
+          <button class="mode-btn" onclick="setMode('checklist','CHECKLIST')" data-mode="checklist">✅ Checklist</button>
+          <button class="mode-btn" onclick="setMode('attack_surface','SUPERFÍCIE')" data-mode="attack_surface">🗺️ Superfície</button>
+          <button class="mode-btn" onclick="setMode('policy','POLÍTICA')" data-mode="policy">📄 Política</button>
         </div>
-
         <div id="chips"></div>
         <div id="chat-box"></div>
-
         <div id="input-area">
           <div class="input-top">
-            <button class="file-btn" onclick="document.getElementById('file-input').click()">📎 Arquivo</button>
-            <input type="file" id="file-input" accept=".txt,.log,.py,.js,.php,.html,.json,.xml,.csv,.conf,.sh,.ps1,.bat" onchange="handleFile(this)"/>
+            <button class="itbtn" onclick="document.getElementById('file-input').click()">📎 Arquivo</button>
+            <input type="file" id="file-input" accept=".txt,.log,.py,.js,.php,.html,.json,.xml,.csv,.conf,.sh,.ps1" onchange="handleFile(this)"/>
             <span id="file-badge"></span>
-            <button class="voice-btn" id="voice-btn" onclick="toggleVoice()">🎤 Voz</button>
-            <button class="translate-btn" onclick="translateLast()">🌐 Traduzir PT↔EN</button>
-            <button class="export-btn" onclick="exportConversation()">⬇️ Exportar .md</button>
+            <button class="itbtn" id="voice-btn" onclick="toggleVoice()">🎤 Voz</button>
+            <button class="itbtn" onclick="translateLast()">🌐 Traduzir</button>
+            <button class="itbtn" onclick="exportConversation()">⬇️ Exportar</button>
           </div>
           <div id="input-row">
             <textarea id="user-input" placeholder="Faça sua pergunta..." rows="1"></textarea>
@@ -240,82 +361,212 @@ main{flex:1;display:flex;flex-direction:column;max-width:980px;width:100%;margin
         </div>
       </div>
 
+      <!-- SCANNER -->
+      <div class="panel" id="panel-scanner">
+        <div class="scroll-panel">
+          <div class="panel-section">
+            <h3>// Scanner de Vulnerabilidades Web</h3>
+            <p style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:12px;">Analisa headers de segurança, cookies, informações expostas e configurações inseguras de qualquer URL.</p>
+            <div class="scanner-wrap">
+              <div class="scan-input-row">
+                <input class="scan-input" id="scan-url" type="text" placeholder="https://exemplo.com" />
+                <button class="scan-btn" id="scan-btn" onclick="runScan()">🔍 Escanear</button>
+              </div>
+              <div id="scan-results"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REPUTATION -->
+      <div class="panel" id="panel-reputation">
+        <div class="scroll-panel">
+          <div class="panel-section">
+            <h3>// Dashboard de Reputação IP/Domínio</h3>
+            <p style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:12px;">Consulta AbuseIPDB, VirusTotal, Shodan e DNS em paralelo. Configure as API keys nas variáveis de ambiente da Vercel.</p>
+            <div class="rep-wrap">
+              <div class="scan-input-row">
+                <input class="scan-input" id="rep-target" type="text" placeholder="8.8.8.8 ou exemplo.com" />
+                <button class="scan-btn" id="rep-btn" onclick="runReputation()">🛡️ Analisar</button>
+              </div>
+              <div id="rep-results"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CVE LIVE -->
+      <div class="panel" id="panel-cve">
+        <div class="scroll-panel">
+          <div class="panel-section">
+            <h3>// CVEs Críticos — Últimas 24 horas</h3>
+            <div class="cve-refresh">
+              <button class="scan-btn" onclick="loadCVEs(true)" style="padding:6px 14px;font-size:11px;">↻ Atualizar</button>
+              <span id="cve-updated"></span>
+            </div>
+            <div id="cve-list" class="cve-list"><div class="scan-loading">🔄 Carregando CVEs...</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LAB GENERATOR -->
+      <div class="panel" id="panel-lab">
+        <div class="scroll-panel">
+          <div class="panel-section">
+            <h3>// Gerador de Laboratório Docker</h3>
+            <p style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-bottom:10px;">Gera um ambiente docker-compose completo com máquinas vulneráveis para praticar.</p>
+            <div class="lab-wrap">
+              <div class="lab-topics">
+                <div class="lab-topic" onclick="setLabTopic('SQL Injection com MySQL e PHP')">SQLi</div>
+                <div class="lab-topic" onclick="setLabTopic('XSS e CSRF com aplicação web')">XSS/CSRF</div>
+                <div class="lab-topic" onclick="setLabTopic('Buffer overflow e exploração de binários Linux')">Buffer Overflow</div>
+                <div class="lab-topic" onclick="setLabTopic('Pentest em rede com múltiplos serviços')">Network Pentest</div>
+                <div class="lab-topic" onclick="setLabTopic('Active Directory e ataques Kerberos')">Active Directory</div>
+                <div class="lab-topic" onclick="setLabTopic('Análise de malware em ambiente isolado')">Malware Analysis</div>
+                <div class="lab-topic" onclick="setLabTopic('Forense digital com disco e memória')">Forense Digital</div>
+                <div class="lab-topic" onclick="setLabTopic('SSRF e LFI em aplicação web moderna')">SSRF/LFI</div>
+                <div class="lab-topic" onclick="setLabTopic('Privilege escalation Linux e Windows')">Privesc</div>
+                <div class="lab-topic" onclick="setLabTopic('CTF completo com múltiplos desafios web')">CTF Completo</div>
+              </div>
+              <div class="scan-input-row">
+                <input class="scan-input" id="lab-topic" type="text" placeholder="Ex: SQL Injection, XSS, Buffer Overflow, Active Directory..." />
+                <button class="scan-btn" id="lab-btn" onclick="generateLab()">🧪 Gerar Lab</button>
+              </div>
+              <div id="lab-result"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TERMINAL -->
+      <div class="panel" id="panel-terminal">
+        <div style="font-size:11px;color:var(--muted);font-family:var(--mono);padding:8px 0 6px;flex-shrink:0;">
+          Terminal web educativo — comandos de reconhecimento e OSINT (whois, dig, nslookup, ping, curl headers, traceroute simulation)
+        </div>
+        <div id="terminal-wrap">
+          <div id="terminal-box"></div>
+          <div id="terminal-input-row">
+            <span class="term-prompt">cyber-venum@proxybt:~$</span>
+            <input id="term-input" placeholder="Digite um comando..." autocomplete="off" autocorrect="off"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- MULTIPLAYER -->
+      <div class="panel" id="panel-multiplayer">
+        <div class="scroll-panel" style="padding:10px 0;">
+          <div id="mp-lobby" class="mp-wrap">
+            <div class="mp-sidebar">
+              <div class="mp-card">
+                <h4>// Seu perfil</h4>
+                <input class="mp-input" id="mp-username" placeholder="Seu nome" value="Hacker"/>
+                <button class="mp-btn" onclick="refreshRooms()">↻ Atualizar salas</button>
+              </div>
+              <div class="mp-card">
+                <h4>// Criar sala</h4>
+                <input class="mp-input" id="room-name" placeholder="Nome da sala"/>
+                <input class="mp-input" id="room-challenge" placeholder="Desafio CTF"/>
+                <button class="mp-btn" onclick="createRoom()">+ Criar Sala</button>
+              </div>
+              <div class="mp-card">
+                <h4>// Entrar por código</h4>
+                <input class="mp-input" id="room-code" placeholder="Código da sala" style="text-transform:uppercase"/>
+                <button class="mp-btn outline" onclick="joinRoomByCode()">→ Entrar</button>
+              </div>
+            </div>
+            <div class="mp-main">
+              <div class="mp-card" style="flex:1;">
+                <h4>// Salas disponíveis</h4>
+                <div id="room-list" class="room-list"><div style="font-size:11px;font-family:var(--mono);color:var(--muted);text-align:center;padding:20px">Nenhuma sala ativa. Crie uma!</div></div>
+              </div>
+            </div>
+          </div>
+          <div id="mp-room" style="display:none;" class="mp-wrap">
+            <div class="mp-sidebar">
+              <div class="mp-card">
+                <h4>// <span id="room-title-display">Sala</span></h4>
+                <div style="font-size:10px;font-family:var(--mono);color:var(--muted);margin-bottom:8px;">Código: <strong id="room-code-display" style="color:var(--accent2)"></strong></div>
+                <button class="mp-btn outline" onclick="leaveRoom()">← Sair da sala</button>
+              </div>
+              <div class="mp-card" style="flex:1;">
+                <h4>// Jogadores</h4>
+                <div id="players-list" class="players-list"></div>
+              </div>
+              <div class="mp-card">
+                <h4>// Submeter Flag</h4>
+                <div class="flag-row">
+                  <input class="flag-input" id="flag-input" placeholder="flag{...}"/>
+                  <button class="flag-btn" onclick="submitFlag()">▶</button>
+                </div>
+                <div id="flag-result" style="font-size:11px;font-family:var(--mono);margin-top:6px;"></div>
+              </div>
+            </div>
+            <div class="mp-main">
+              <div class="mp-card">
+                <h4>// Desafio</h4>
+                <div class="challenge-box" id="challenge-display"></div>
+              </div>
+              <div class="mp-card" style="flex:1;display:flex;flex-direction:column;">
+                <h4>// Chat da sala</h4>
+                <div id="mp-chat" class="mp-chat"></div>
+                <div class="mp-input-row">
+                  <input class="mp-text" id="mp-msg" placeholder="Mensagem..." onkeydown="if(event.key==='Enter')sendMpMsg()"/>
+                  <button class="mp-send" onclick="sendMpMsg()">→</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- REFERÊNCIA -->
       <div class="panel" id="panel-ref">
-        <div class="ref-panel">
-          <div class="ref-section"><h3>// OWASP Top 10</h3><div class="ref-grid">
-            <div class="ref-card" onclick="q('Explique A01 Broken Access Control com payloads de exemplo')"><h4>A01 — Broken Access Control</h4><p>Controle de acesso falho</p></div>
-            <div class="ref-card" onclick="q('Explique A02 Cryptographic Failures com exemplos')"><h4>A02 — Cryptographic Failures</h4><p>Falhas em criptografia</p></div>
-            <div class="ref-card" onclick="q('Explique A03 Injection com payloads SQLi e XSS')"><h4>A03 — Injection</h4><p>SQL, NoSQL, OS, LDAP</p></div>
-            <div class="ref-card" onclick="q('Explique A04 Insecure Design')"><h4>A04 — Insecure Design</h4><p>Arquitetura insegura</p></div>
-            <div class="ref-card" onclick="q('Explique A05 Security Misconfiguration')"><h4>A05 — Misconfiguration</h4><p>Configurações incorretas</p></div>
-            <div class="ref-card" onclick="q('Explique A06 Vulnerable Components')"><h4>A06 — Vulnerable Components</h4><p>Componentes desatualizados</p></div>
-            <div class="ref-card" onclick="q('Explique A07 Authentication Failures com bypass examples')"><h4>A07 — Auth Failures</h4><p>Falhas de autenticação</p></div>
-            <div class="ref-card" onclick="q('Explique A08 Software Integrity Failures')"><h4>A08 — Integrity Failures</h4><p>Falhas de integridade</p></div>
-            <div class="ref-card" onclick="q('Explique A09 Security Logging Failures')"><h4>A09 — Logging Failures</h4><p>Falhas em logs</p></div>
-            <div class="ref-card" onclick="q('Explique A10 SSRF com payloads de exemplo')"><h4>A10 — SSRF</h4><p>Server-Side Request Forgery</p></div>
+        <div class="scroll-panel">
+          <div class="panel-section"><h3>// OWASP Top 10</h3><div class="grid2">
+            <div class="card clickable" onclick="q('Explique A01 com payloads')"><h4>A01 — Broken Access Control</h4><p>Controle de acesso falho</p></div>
+            <div class="card clickable" onclick="q('Explique A02 Cryptographic Failures')"><h4>A02 — Cryptographic Failures</h4><p>Falhas em criptografia</p></div>
+            <div class="card clickable" onclick="q('Explique A03 Injection com payloads')"><h4>A03 — Injection</h4><p>SQL, NoSQL, OS, LDAP</p></div>
+            <div class="card clickable" onclick="q('Explique A04 Insecure Design')"><h4>A04 — Insecure Design</h4><p>Arquitetura insegura</p></div>
+            <div class="card clickable" onclick="q('Explique A05 Security Misconfiguration')"><h4>A05 — Misconfiguration</h4><p>Configurações incorretas</p></div>
+            <div class="card clickable" onclick="q('Explique A06 Vulnerable Components')"><h4>A06 — Vulnerable Components</h4><p>Componentes desatualizados</p></div>
+            <div class="card clickable" onclick="q('Explique A07 Authentication Failures')"><h4>A07 — Auth Failures</h4><p>Falhas de autenticação</p></div>
+            <div class="card clickable" onclick="q('Explique A08 Integrity Failures')"><h4>A08 — Integrity Failures</h4><p>Falhas de integridade</p></div>
+            <div class="card clickable" onclick="q('Explique A09 Logging Failures')"><h4>A09 — Logging Failures</h4><p>Falhas em logs</p></div>
+            <div class="card clickable" onclick="q('Explique A10 SSRF com payloads')"><h4>A10 — SSRF</h4><p>Server-Side Request Forgery</p></div>
           </div></div>
-          <div class="ref-section"><h3>// Payload Rápido</h3><div class="ref-grid">
-            <div class="ref-card" onclick="setMode('payload','PAYLOAD');q('Gere payloads completos de XSS: reflected, stored, DOM, polyglot e bypass de filtro')"><h4>💉 XSS Payloads</h4><p>Reflected, Stored, DOM, Polyglot</p></div>
-            <div class="ref-card" onclick="setMode('payload','PAYLOAD');q('Gere payloads completos de SQL Injection: classic, blind, union, error-based, time-based e bypass de WAF')"><h4>💉 SQLi Payloads</h4><p>Classic, Blind, Union, Time-based</p></div>
-            <div class="ref-card" onclick="setMode('payload','PAYLOAD');q('Gere payloads de SSRF incluindo cloud metadata AWS GCP Azure e bypass de filtros')"><h4>💉 SSRF Payloads</h4><p>Cloud metadata, filter bypass</p></div>
-            <div class="ref-card" onclick="setMode('payload','PAYLOAD');q('Gere reverse shells completos em bash python php powershell netcat e socat')"><h4>🐚 Reverse Shells</h4><p>Bash, Python, PHP, PowerShell</p></div>
-            <div class="ref-card" onclick="setMode('payload','PAYLOAD');q('Gere payloads de RCE e command injection para Linux e Windows')"><h4>💥 RCE Payloads</h4><p>Command injection, RCE</p></div>
-            <div class="ref-card" onclick="setMode('payload','PAYLOAD');q('Gere payloads de LFI e path traversal com bypass de filtros e PHP wrappers')"><h4>📁 LFI Payloads</h4><p>Path traversal, PHP wrappers</p></div>
-            <div class="ref-card" onclick="setMode('payload','PAYLOAD');q('Gere payloads de XXE básico, blind XXE e OOB com exemplos completos')"><h4>📄 XXE Payloads</h4><p>Basic, Blind, OOB</p></div>
-            <div class="ref-card" onclick="setMode('payload','PAYLOAD');q('Gere payloads de SSTI para Jinja2 Twig Freemarker e Pebble')"><h4>🔥 SSTI Payloads</h4><p>Jinja2, Twig, Freemarker</p></div>
-            <div class="ref-card" onclick="setMode('payload','PAYLOAD');q('Gere payloads de JWT attacks: alg none, key confusion e brute force')"><h4>🔑 JWT Attacks</h4><p>Alg none, key confusion</p></div>
-            <div class="ref-card" onclick="setMode('payload','PAYLOAD');q('Gere webshells PHP ASP ASPX JSP completos e funcionais')"><h4>🕸️ Webshells</h4><p>PHP, ASP, ASPX, JSP</p></div>
-            <div class="ref-card" onclick="setMode('payload','PAYLOAD');q('Gere payloads de privilege escalation para Linux e Windows')"><h4>⬆️ Privesc</h4><p>Linux e Windows escalation</p></div>
-            <div class="ref-card" onclick="setMode('payload','PAYLOAD');q('Gere payloads de CSRF GET POST e JSON com bypass de SameSite')"><h4>🔄 CSRF Payloads</h4><p>GET, POST, JSON, bypass</p></div>
-          </div></div>
-          <div class="ref-section"><h3>// Forense Digital</h3><div class="ref-grid">
-            <div class="ref-card" onclick="q('O que é cadeia de custódia?')"><h4>Cadeia de Custódia</h4><p>Preservação de evidências</p></div>
-            <div class="ref-card" onclick="q('Como fazer aquisição de imagem forense com dd e FTK?')"><h4>Aquisição de Imagem</h4><p>dd, FTK Imager, Autopsy</p></div>
-            <div class="ref-card" onclick="q('Como analisar memória RAM com Volatility 3?')"><h4>Análise de Memória</h4><p>Volatility 3, artefatos</p></div>
-            <div class="ref-card" onclick="q('Como analisar logs suspeitos em forense?')"><h4>Análise de Logs</h4><p>Event Viewer, syslog, SIEM</p></div>
-            <div class="ref-card" onclick="q('Como fazer análise de malware estática e dinâmica?')"><h4>Análise de Malware</h4><p>Sandbox, estática, dinâmica</p></div>
-            <div class="ref-card" onclick="q('Como fazer forense em redes com Wireshark?')"><h4>Forense em Redes</h4><p>Wireshark, pcap, tráfego</p></div>
-          </div></div>
-          <div class="ref-section"><h3>// Frameworks</h3><div class="ref-grid">
-            <div class="ref-card" onclick="q('Explique NIST CSF com exemplos práticos')"><h4>NIST CSF</h4><p>Identify, Protect, Detect, Respond, Recover</p></div>
-            <div class="ref-card" onclick="q('O que é ISO 27001 e como implementar?')"><h4>ISO 27001</h4><p>Gestão de segurança da informação</p></div>
-            <div class="ref-card" onclick="q('Como usar MITRE ATT&CK na prática?')"><h4>MITRE ATT&CK</h4><p>Táticas, técnicas, procedimentos</p></div>
-            <div class="ref-card" onclick="q('O que são CIS Controls e como aplicar?')"><h4>CIS Controls</h4><p>18 controles críticos</p></div>
-            <div class="ref-card" onclick="q('Explique LGPD e seus impactos em cibersegurança')"><h4>LGPD</h4><p>Lei de Proteção de Dados</p></div>
-            <div class="ref-card" onclick="q('O que é PCI-DSS e como se adequar?')"><h4>PCI-DSS</h4><p>Segurança em pagamentos</p></div>
+          <div class="panel-section"><h3>// Payload Rápido</h3><div class="grid2">
+            <div class="card clickable" onclick="setMode('payload','PAYLOAD');q('XSS completo: reflected stored DOM polyglot bypass')"><h4>💉 XSS Completo</h4><p>Reflected, Stored, DOM, Polyglot</p></div>
+            <div class="card clickable" onclick="setMode('payload','PAYLOAD');q('SQLi completo: classic blind union time-based WAF bypass')"><h4>💉 SQLi Completo</h4><p>Classic, Blind, Union, Time-based</p></div>
+            <div class="card clickable" onclick="setMode('payload','PAYLOAD');q('Reverse shells: bash python php powershell nc socat')"><h4>🐚 Reverse Shells</h4><p>Bash, Python, PHP, PowerShell</p></div>
+            <div class="card clickable" onclick="setMode('payload','PAYLOAD');q('SSRF cloud metadata AWS GCP Azure bypass')"><h4>💉 SSRF + Cloud</h4><p>Metadata, filter bypass</p></div>
+            <div class="card clickable" onclick="setMode('payload','PAYLOAD');q('LFI path traversal PHP wrappers log poisoning')"><h4>📁 LFI Payloads</h4><p>Path traversal, wrappers</p></div>
+            <div class="card clickable" onclick="setMode('payload','PAYLOAD');q('Webshells PHP ASP ASPX JSP completos')"><h4>🕸️ Webshells</h4><p>PHP, ASP, ASPX, JSP</p></div>
           </div></div>
         </div>
       </div>
 
+      <!-- FERRAMENTAS -->
       <div class="panel" id="panel-tools">
-        <div class="ref-panel"><div class="tools-grid">
-          <div class="tool-card"><h4>🔍 Nmap</h4><p>Scanner de portas, serviços e OS fingerprinting.</p><span class="tool-tag">reconhecimento</span><span class="tool-tag">scanning</span></div>
-          <div class="tool-card"><h4>💥 Metasploit</h4><p>Framework de exploração de vulnerabilidades.</p><span class="tool-tag">exploração</span><span class="tool-tag">pentest</span></div>
-          <div class="tool-card"><h4>🕷️ Burp Suite</h4><p>Proxy para interceptação e testes web.</p><span class="tool-tag">web</span><span class="tool-tag">pentest</span></div>
-          <div class="tool-card"><h4>🦈 Wireshark</h4><p>Análise de pacotes e captura de tráfego.</p><span class="tool-tag">forense</span><span class="tool-tag">redes</span></div>
-          <div class="tool-card"><h4>🧠 Volatility 3</h4><p>Framework de análise forense de memória RAM.</p><span class="tool-tag">forense</span><span class="tool-tag">memória</span></div>
-          <div class="tool-card"><h4>🔓 Hashcat</h4><p>Quebra de hashes por GPU com regras avançadas.</p><span class="tool-tag">criptografia</span><span class="tool-tag">senhas</span></div>
-          <div class="tool-card"><h4>🌐 Nikto</h4><p>Scanner de vulnerabilidades em servidores web.</p><span class="tool-tag">web</span><span class="tool-tag">scanning</span></div>
-          <div class="tool-card"><h4>🔎 TheHarvester</h4><p>OSINT: emails, subdomínios, IPs e nomes.</p><span class="tool-tag">osint</span><span class="tool-tag">reconhecimento</span></div>
-          <div class="tool-card"><h4>🐉 Hydra</h4><p>Força bruta para SSH, FTP, HTTP, RDP e mais.</p><span class="tool-tag">força bruta</span><span class="tool-tag">senhas</span></div>
-          <div class="tool-card"><h4>🕵️ Autopsy</h4><p>Plataforma forense para análise de disco.</p><span class="tool-tag">forense</span><span class="tool-tag">disco</span></div>
-          <div class="tool-card"><h4>📡 Aircrack-ng</h4><p>Auditoria Wi-Fi, captura e quebra WPA/WPA2.</p><span class="tool-tag">wireless</span><span class="tool-tag">redes</span></div>
-          <div class="tool-card"><h4>🛡️ Snort/Suricata</h4><p>IDS/IPS open source com detecção avançada.</p><span class="tool-tag">defesa</span><span class="tool-tag">IDS</span></div>
-          <div class="tool-card"><h4>🔬 Ghidra</h4><p>Engenharia reversa da NSA para binários e malware.</p><span class="tool-tag">reversing</span><span class="tool-tag">malware</span></div>
-          <div class="tool-card"><h4>🌊 hping3</h4><p>Gerador de pacotes TCP/IP para testes de rede.</p><span class="tool-tag">redes</span><span class="tool-tag">DoS</span></div>
-          <div class="tool-card"><h4>🕸️ sqlmap</h4><p>Detecção e exploração automática de SQLi.</p><span class="tool-tag">web</span><span class="tool-tag">injeção</span></div>
-          <div class="tool-card"><h4>📋 Lynis</h4><p>Auditoria de segurança e hardening Linux/Unix.</p><span class="tool-tag">hardening</span><span class="tool-tag">auditoria</span></div>
-          <div class="tool-card"><h4>🎯 Cobalt Strike</h4><p>Plataforma de red team e simulação de adversários.</p><span class="tool-tag">red team</span><span class="tool-tag">C2</span></div>
-          <div class="tool-card"><h4>🐍 Impacket</h4><p>Suite Python para protocolos de rede Windows/AD.</p><span class="tool-tag">AD</span><span class="tool-tag">exploração</span></div>
-          <div class="tool-card"><h4>🔭 Shodan</h4><p>Motor de busca para dispositivos expostos na internet.</p><span class="tool-tag">osint</span><span class="tool-tag">reconhecimento</span></div>
-          <div class="tool-card"><h4>⚡ CrackMapExec</h4><p>Framework para pentest em ambientes Windows/AD.</p><span class="tool-tag">AD</span><span class="tool-tag">pentest</span></div>
+        <div class="scroll-panel"><div class="tools-grid">
+          <div class="card"><h4>🔍 Nmap</h4><p>Scanner de portas e OS.</p><span class="tag">recon</span><span class="tag">scanning</span></div>
+          <div class="card"><h4>💥 Metasploit</h4><p>Framework de exploração.</p><span class="tag">exploit</span><span class="tag">pentest</span></div>
+          <div class="card"><h4>🕷️ Burp Suite</h4><p>Proxy para testes web.</p><span class="tag">web</span><span class="tag">pentest</span></div>
+          <div class="card"><h4>🦈 Wireshark</h4><p>Análise de pacotes.</p><span class="tag">forense</span><span class="tag">redes</span></div>
+          <div class="card"><h4>🧠 Volatility 3</h4><p>Análise de memória RAM.</p><span class="tag">forense</span><span class="tag">memória</span></div>
+          <div class="card"><h4>🔓 Hashcat</h4><p>Quebra de hashes GPU.</p><span class="tag">crypto</span><span class="tag">senhas</span></div>
+          <div class="card"><h4>🌐 Nikto</h4><p>Scanner web.</p><span class="tag">web</span><span class="tag">scanning</span></div>
+          <div class="card"><h4>🔎 TheHarvester</h4><p>OSINT de subdomínios.</p><span class="tag">osint</span><span class="tag">recon</span></div>
+          <div class="card"><h4>🐉 Hydra</h4><p>Força bruta SSH, FTP.</p><span class="tag">brute</span><span class="tag">senhas</span></div>
+          <div class="card"><h4>🕵️ Autopsy</h4><p>Forense de disco.</p><span class="tag">forense</span><span class="tag">disco</span></div>
+          <div class="card"><h4>📡 Aircrack-ng</h4><p>Auditoria Wi-Fi.</p><span class="tag">wireless</span></div>
+          <div class="card"><h4>🛡️ Snort</h4><p>IDS/IPS open source.</p><span class="tag">defesa</span></div>
+          <div class="card"><h4>🔬 Ghidra</h4><p>Engenharia reversa.</p><span class="tag">reversing</span></div>
+          <div class="card"><h4>🕸️ sqlmap</h4><p>SQLi automático.</p><span class="tag">web</span><span class="tag">injeção</span></div>
+          <div class="card"><h4>🎯 Cobalt Strike</h4><p>Red team C2.</p><span class="tag">red team</span></div>
+          <div class="card"><h4>⚡ CrackMapExec</h4><p>Pentest AD/Windows.</p><span class="tag">AD</span></div>
+          <div class="card"><h4>🔭 Shodan</h4><p>Motor busca dispositivos.</p><span class="tag">osint</span></div>
+          <div class="card"><h4>🐍 Impacket</h4><p>Protocolos Windows/AD.</p><span class="tag">AD</span></div>
         </div></div>
-      </div>
-
-      <div class="panel" id="panel-dashboard">
-        <div id="dashboard-panel">
-          <div id="dash-content" class="dash-loading">🔄 Carregando ameaças em tempo real...</div>
-        </div>
       </div>
     </main>
   </div>
@@ -323,110 +574,67 @@ main{flex:1;display:flex;flex-direction:column;max-width:980px;width:100%;margin
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.1.5/purify.min.js"></script>
 <script>
-const DB_KEY='cybervenum_v4';
+const DB_KEY='cybervenum_v5';
 let SESSION_TOKEN=null,loginAttempts=0,lockUntil=0;
 let conversations=[],currentConvId=null,sidebarOpen=true;
 let currentMode='chat',attachedFile=null,isRecording=false,recognition=null;
+let currentRoomId=null,mpPollInterval=null,lastMsgTs=0;
+const MY_USER_ID='user_'+Math.random().toString(36).slice(2,8);
 
+// ── MODES ─────────────────────────────────────────────────────────────
 const MODE_CHIPS={
-  chat:['🔍 Notícias hoje','🔍 CVEs críticos recentes','SQL Injection','Phishing','Pentest','Ransomware','Zero Trust','OWASP Top 10','Hardening Linux','Forense Digital','TLS/SSL','LGPD'],
-  payload:['XSS completo (reflected+stored+DOM+polyglot)','SQLi completo (classic+blind+union+time-based)','Reverse shell (bash+python+php+powershell)','SSRF + cloud metadata bypass','LFI + PHP wrappers + log poisoning','XXE básico + blind + OOB','SSTI (Jinja2+Twig+Freemarker)','RCE + command injection Linux e Windows','Webshell PHP+ASP+JSP','Privilege escalation Linux+Windows','CSRF GET+POST+JSON','JWT attacks (alg none + key confusion)','File upload bypass + webshell','Buffer overflow stack básico','Payloads de evasão WAF bypass','Deauth attack + evil twin Wi-Fi'],
-  redteam:['Simular APT contra empresa de tecnologia','Plano de ataque completo infraestrutura corporativa','Red team Active Directory','Ataque cadeia de suprimentos','Simulação ransomware enterprise','Comprometimento cloud AWS','Lateral movement e privilege escalation','C2 e persistência avançada'],
-  pentest:['Gerar relatório completo de pentest','Documentar RCE crítico encontrado','Documentar XSS stored','Documentar SQLi blind','Documentar SSRF crítico','Calcular CVSS de vulnerabilidade','Criar sumário executivo'],
-  osint:['Reconhecimento em empresa alvo','Analisar IP suspeito','Investigar domínio phishing','Buscar vazamentos de dados','OSINT em pessoa (ético)','Footprinting de infraestrutura'],
-  incident:['Resposta a incidente de ransomware','Investigar possível APT na rede','Resposta a data breach','Conter lateral movement detectado','Investigar malware em endpoint','Análise pós-incidente'],
-  phishing:['Criar e-mail de phishing educativo','Simular spear phishing corporativo','Script de vishing profissional','Página de phishing para conscientização','Análise de técnicas de engenharia social','Treinamento anti-phishing'],
-  quiz:['Quiz iniciante — redes e protocolos','Quiz intermediário — pentest e exploração','Quiz avançado — forense e malware','Simular prova CEH','Simular prova CompTIA Security+','Treinar OWASP Top 10'],
-  ctf:['Ajuda com desafio web CTF','CTF crypto — cipher desconhecido','Forense CTF — arquivo suspeito','Reversing CTF — binário','Stego CTF — imagem com dados ocultos','Pwn CTF — buffer overflow'],
-  codereview:['Auditar código PHP por SQLi e XSS','Code review Python — vulnerabilidades','Analisar código JS — prototype pollution','Auditar autenticação e sessão','Revisar tratamento de upload','Analisar código de criptografia'],
-  fileanalysis:['Analisar log Apache suspeito','Verificar script PHP malicioso','Analisar PowerShell ofuscado','Investigar log de auth com falhas','Analisar config nginx/apache','Examinar pcap de tráfego suspeito'],
-  decoder:['Decodificar Base64','Decode URL encoded string','Analisar JWT token','Identificar tipo de hash','Decodificar hex para texto','Decode HTML entities','ROT13/ROT47 decode'],
-  password:['Analisar força: MinhaSenh@2024','Analisar força: password123','Analisar força: P@$$w0rd!2024','Gerar política de senhas fortes','Calcular entropia de senha','Técnicas de quebra de senha'],
-  cvss:['Calcular CVSS para RCE sem autenticação','Calcular CVSS para XSS stored','Calcular CVSS para SQLi blind','Calcular CVSS para SSRF','Explicar métricas CVSS 3.1','Diferença CVSS 2.0 vs 3.1'],
-  wordlist:['Wordlist para empresa de tecnologia','Wordlist baseada em nome + data','Wordlist padrões brasileiros comuns','Wordlist para ataque SSH','Wordlist admin panel','Mutações de senha corporativa'],
-  checklist:['Checklist hardening Linux','Checklist segurança web app','Checklist AWS cloud security','Checklist Windows Server 2022','Checklist pentest completo','Checklist resposta a incidentes'],
-  attack_surface:['Mapear superfície: empresa SaaS','Mapear superfície: e-commerce','Mapear superfície: rede corporativa','Mapear superfície: app mobile','Vetores de ataque cloud-native','Superfície de ataque Active Directory'],
-  policy:['Gerar Política de Segurança da Informação','Gerar Política de Senhas','Gerar Política de Acesso Remoto','Gerar Política de Uso Aceitável','Gerar Política de Resposta a Incidentes','Gerar Política BYOD'],
-  flashcard:['Flashcards conceitos básicos de segurança','Flashcards ferramentas de pentest','Flashcards ataques e mitigações','Flashcards para CEH','Flashcards criptografia','Flashcards forense digital'],
-  timeline:['Construir timeline de ataque com esses eventos','Analisar sequência de logs suspeitos','Mapear TTPs MITRE em incidente','Timeline de comprometimento de conta','Reconstruir ataque a partir de evidências']
+  chat:['🔍 Notícias hoje','🔍 CVEs críticos recentes','SQL Injection','Phishing','Pentest','Ransomware','Zero Trust','OWASP Top 10','Hardening Linux','Forense Digital'],
+  payload:['XSS completo (reflected+stored+DOM+polyglot)','SQLi (classic+blind+union+time-based+WAF bypass)','Reverse shell (bash+python+php+powershell+nc)','SSRF + cloud metadata (AWS+GCP+Azure)','LFI + PHP wrappers + log poisoning','XXE básico + blind + OOB','SSTI Jinja2+Twig+Freemarker','RCE + command injection Linux+Windows','Webshell PHP+ASP+JSP','Privesc Linux+Windows','CSRF GET+POST+JSON','JWT alg:none + key confusion','File upload bypass + webshell','WAF evasion payloads','Deauth + evil twin Wi-Fi'],
+  redteam:['Plano APT contra empresa de tecnologia','Red team infraestrutura corporativa completa','Comprometimento Active Directory','Ataque cadeia de suprimentos','Ransomware enterprise simulation','Comprometimento cloud AWS','C2 e persistência avançada'],
+  pentest:['Gerar relatório completo','Documentar RCE crítico','Documentar XSS stored','Documentar SQLi blind','Calcular CVSS score'],
+  osint:['Reconhecimento empresa alvo','OSINT de domínio','Footprinting infraestrutura','Buscar vazamentos de dados'],
+  incident:['Resposta a ransomware','Investigar APT','Resposta a data breach','Conter lateral movement'],
+  phishing:['E-mail phishing educativo','Spear phishing corporativo','Script de vishing','Página phishing conscientização'],
+  quiz:['Quiz iniciante','Quiz intermediário','Quiz avançado','Simular prova CEH','Simular prova OSCP'],
+  ctf:['Desafio web CTF','CTF crypto','Forense CTF','Reversing CTF','Stego CTF'],
+  codereview:['Auditar PHP por SQLi+XSS','Code review Python','Analisar JS — prototype pollution','Auditar autenticação'],
+  fileanalysis:['Analisar log Apache','Verificar PHP malicioso','Analisar PowerShell ofuscado','Investigar log de auth'],
+  decoder:['Decodificar Base64','URL decode','Analisar JWT','Identificar hash','Decode hex'],
+  password:['Analisar: MinhaSenh@2024','Analisar: password123','Gerar política de senhas fortes'],
+  cvss:['CVSS para RCE sem auth','CVSS para XSS stored','CVSS para SQLi blind'],
+  wordlist:['Wordlist empresa de tecnologia','Wordlist nome+data','Padrões brasileiros comuns'],
+  checklist:['Checklist hardening Linux','Checklist web app security','Checklist AWS','Checklist Windows Server'],
+  attack_surface:['Mapear superfície SaaS','Mapear superfície e-commerce','Superfície AD'],
+  policy:['Política de Segurança da Informação','Política de Senhas','Política de Acesso Remoto'],
+  flashcard:['Flashcards pentest','Flashcards forense','Flashcards criptografia'],
+  timeline:['Construir timeline de ataque','Analisar logs suspeitos','Mapear TTPs MITRE']
 };
-
-const MODE_HINTS={
-  chat:'Pergunte sobre qualquer tema de cibersegurança',
-  payload:'⚠️ Apenas para uso em ambientes autorizados. Descreva o tipo de payload que precisa.',
-  redteam:'Descreva a infraestrutura alvo para simular o plano de ataque completo',
-  pentest:'Descreva as vulnerabilidades encontradas para gerar o relatório profissional',
-  osint:'Cole URL, IP, domínio ou descreva o alvo para análise OSINT',
-  incident:'Descreva o incidente de segurança para guiar a resposta',
-  phishing:'Descreva o cenário para criar material educativo de phishing/conscientização',
-  quiz:'Escolha um tema ou nível de dificuldade para o quiz',
-  ctf:'Descreva o desafio CTF e cole pistas ou dados relevantes',
-  codereview:'Cole o código para auditoria completa de segurança',
-  fileanalysis:'Cole o conteúdo do arquivo/log ou use 📎 para carregar',
-  decoder:'Cole o texto codificado para decodificar ou encode/decode',
-  password:'Digite uma senha para análise completa de força',
-  cvss:'Descreva a vulnerabilidade para calcular o score CVSS 3.1',
-  wordlist:'Informe dados do alvo para gerar wordlist personalizada',
-  checklist:'Informe o tipo de ambiente para gerar o checklist',
-  attack_surface:'Descreva a infraestrutura para mapear a superfície de ataque',
-  policy:'Informe o tipo de política que deseja gerar',
-  flashcard:'Escolha o tema para gerar os flashcards de estudo',
-  timeline:'Descreva os eventos ou cole logs para construir a timeline'
-};
+const MODE_HINTS={chat:'Pergunte sobre cibersegurança',payload:'⚠️ Apenas ambientes autorizados. Descreva o payload.',redteam:'Descreva a infraestrutura para o plano de ataque',pentest:'Descreva as vulnerabilidades para o relatório',osint:'Cole URL, IP, domínio ou descreva o alvo',incident:'Descreva o incidente para guiar a resposta',phishing:'Cenário para criar material educativo',quiz:'Tema ou nível para o quiz',ctf:'Descreva o desafio CTF',codereview:'Cole o código para auditoria',fileanalysis:'Cole o conteúdo ou use 📎',decoder:'Cole texto codificado',password:'Digite a senha para análise',cvss:'Descreva a vulnerabilidade',wordlist:'Informe dados do alvo',checklist:'Informe o ambiente',attack_surface:'Descreva a infraestrutura',policy:'Tipo de política que deseja',flashcard:'Tema dos flashcards',timeline:'Eventos ou logs para a timeline'};
 
 function renderChips(){
   const chips=MODE_CHIPS[currentMode]||MODE_CHIPS.chat;
   document.getElementById('chips').innerHTML=chips.map(c=>`<div class="chip" onclick="quickSend('${c.replace(/'/g,"\\'")}')">${c}</div>`).join('');
   document.getElementById('user-input').placeholder=MODE_HINTS[currentMode]||'Faça sua pergunta...';
 }
-
 function setMode(mode,label){
   currentMode=mode;
   document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
   document.getElementById('mode-indicator').textContent=label;
   renderChips();
-  const hints={
-    payload:'⚠️ <strong>Modo Payload Generator ativo</strong> — Gera payloads completos e funcionais para testes em ambientes AUTORIZADOS. XSS, SQLi, SSRF, XXE, RCE, LFI, shells e muito mais.',
-    redteam:'🎯 <strong>Modo Red Team Simulator ativo</strong> — Descreva a infraestrutura alvo e vou criar um plano de ataque completo com TTPs, ferramentas e timeline.',
-    pentest:'📋 <strong>Modo Pentest Report ativo</strong> — Descreva as vulnerabilidades para gerar um relatório profissional completo.',
-    osint:'🔎 <strong>Modo OSINT ativo</strong> — Cole URL, IP, domínio ou hash para análise de reputação e reconhecimento.',
-    incident:'🚨 <strong>Modo Incident Response ativo</strong> — Descreva o incidente e vou guiar pelas fases de resposta com comandos específicos.',
-    phishing:'🎣 <strong>Modo Phishing/Conscientização ativo</strong> — Crio materiais educativos de phishing para treinamento e conscientização.',
-    quiz:'🎓 <strong>Modo Quiz ativo</strong> — Vou gerar perguntas para treinar suas habilidades. Escolha o tema!',
-    ctf:'🚩 <strong>Modo CTF Helper ativo</strong> — Descreva o desafio e vou guiá-lo pelo raciocínio passo a passo.',
-    codereview:'🔬 <strong>Modo Code Review ativo</strong> — Cole o código para auditoria de segurança completa com linha e severidade.',
-    fileanalysis:'🗂️ <strong>Modo Análise de Arquivo ativo</strong> — Cole o conteúdo ou use 📎 para carregar um arquivo.',
-    decoder:'🔐 <strong>Modo Decoder ativo</strong> — Cole qualquer texto codificado: Base64, URL, Hex, JWT, Hash, ROT13 e mais.',
-    password:'🔑 <strong>Modo Análise de Senha ativo</strong> — Digite uma senha para análise completa de força e entropia.',
-    cvss:'📊 <strong>Modo Calculadora CVSS 3.1 ativo</strong> — Vou calcular o score de qualquer vulnerabilidade.',
-    wordlist:'📝 <strong>Modo Wordlist ativo</strong> — Informe dados do alvo para gerar wordlist personalizada.',
-    checklist:'✅ <strong>Modo Checklist ativo</strong> — Informe o ambiente para gerar checklist de hardening detalhado.',
-    attack_surface:'🗺️ <strong>Modo Superfície de Ataque ativo</strong> — Descreva a infraestrutura para mapear todos os vetores de ataque.',
-    policy:'📄 <strong>Modo Gerador de Política ativo</strong> — Gero documentos profissionais de política de segurança.',
-    flashcard:'🃏 <strong>Modo Flashcard ativo</strong> — Vou gerar flashcards de estudo organizados por tema e dificuldade.',
-    timeline:'⏱️ <strong>Modo Timeline de Ataque ativo</strong> — Descreva os eventos para construir a timeline com MITRE ATT&CK.'
-  };
-  if(hints[mode]) addMessage('agent',hints[mode],true);
 }
 
-// LOGIN
+// ── LOGIN ─────────────────────────────────────────────────────────────
 async function doLogin(){
-  const now=Date.now();
-  if(now<lockUntil){document.getElementById('login-error').textContent=`Aguarde ${Math.ceil((lockUntil-now)/1000)}s.`;return;}
+  const now=Date.now();if(now<lockUntil){document.getElementById('login-error').textContent=`Aguarde ${Math.ceil((lockUntil-now)/1000)}s.`;return;}
   const pass=document.getElementById('login-pass').value.trim();if(!pass)return;
   const btn=document.getElementById('login-btn');btn.disabled=true;btn.textContent='Verificando...';
   try{
     const resp=await fetch('/api/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({password:pass})});
     const data=await resp.json();
-    if(resp.ok&&data.ok&&data.token){SESSION_TOKEN=data.token;document.getElementById('login-screen').style.display='none';loadConversations();renderSidebar();newConversation();}
+    if(resp.ok&&data.ok&&data.token){SESSION_TOKEN=data.token;document.getElementById('login-screen').style.display='none';loadConversations();renderSidebar();newConversation();startCVENotifications();}
     else{loginAttempts++;if(loginAttempts>=5){lockUntil=Date.now()+30000;loginAttempts=0;}document.getElementById('login-error').textContent=data.error||'Senha incorreta.';document.getElementById('login-pass').value='';}
   }catch{document.getElementById('login-error').textContent='Erro de conexão.';}
   btn.disabled=false;btn.textContent='Entrar';
 }
-function doLogout(){SESSION_TOKEN=null;location.reload();}
+function doLogout(){SESSION_TOKEN=null;if(mpPollInterval)clearInterval(mpPollInterval);location.reload();}
 document.getElementById('login-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 
-// SIDEBAR
+// ── SIDEBAR ───────────────────────────────────────────────────────────
 function loadConversations(){try{conversations=JSON.parse(localStorage.getItem(DB_KEY)||'[]');}catch{conversations=[];}}
 function saveConversations(){try{localStorage.setItem(DB_KEY,JSON.stringify(conversations));}catch{}}
 function getCurrentConv(){return conversations.find(c=>c.id===currentConvId);}
@@ -451,74 +659,47 @@ function renderSidebar(){
     </div>`).join('');
 }
 function newConversation(){
-  const id='conv_'+Date.now();
-  conversations.push({id,title:'Nova conversa',messages:[],updatedAt:Date.now()});
+  const id='conv_'+Date.now();conversations.push({id,title:'Nova conversa',messages:[],updatedAt:Date.now()});
   saveConversations();currentConvId=id;renderSidebar();
-  document.getElementById('chat-box').innerHTML='';
-  setMode('chat','CHAT');
-  addMessage('agent','👋 Olá! Sou o <strong>Cyber Venum</strong>, criado por <strong>Aleff — ProxyBT</strong>.<br><br>Escolha um <strong>modo</strong> acima. Destaques:<br>💉 <strong>Payloads</strong> — gero XSS, SQLi, RCE, shells e muito mais<br>🎯 <strong>Red Team</strong> — plano de ataque completo com MITRE ATT&CK<br>📡 <strong>Ameaças ao vivo</strong> — notícias e CVEs em tempo real<br>+ 15 outros modos especializados',true);
+  document.getElementById('chat-box').innerHTML='';setMode('chat','CHAT');
+  addMessage('agent','👋 Olá! Sou o <strong>Cyber Venum</strong>, criado por <strong>Aleff — ProxyBT</strong>.<br><br>🔥 Novidades: <strong>Scanner Web</strong> · <strong>CVEs Live</strong> · <strong>Lab Docker</strong> · <strong>Terminal</strong> · <strong>Multiplayer CTF</strong> · <strong>Dashboard Reputação</strong><br><br>Use os modos acima ou explore as abas!',true);
 }
-function loadConversation(id){
-  currentConvId=id;const conv=getCurrentConv();if(!conv)return;
-  renderSidebar();document.getElementById('chat-box').innerHTML='';
-  if(!conv.messages.length)addMessage('agent','Continuando. Como posso ajudar?',false);
-  else conv.messages.forEach(m=>addMessage(m.role==='user'?'user':'agent',m.role==='user'?m.content:formatResponse(m.content),m.role!=='user'));
-}
+function loadConversation(id){currentConvId=id;const conv=getCurrentConv();if(!conv)return;renderSidebar();document.getElementById('chat-box').innerHTML='';if(!conv.messages.length)addMessage('agent','Continuando. Como posso ajudar?',false);else conv.messages.forEach(m=>addMessage(m.role==='user'?'user':'agent',m.role==='user'?m.content:formatResponse(m.content),m.role!=='user'));}
 function deleteConv(id){conversations=conversations.filter(c=>c.id!==id);saveConversations();if(currentConvId===id)newConversation();else renderSidebar();}
 
-// FILE
+// ── FILE / VOICE / EXPORT ─────────────────────────────────────────────
 function handleFile(input){
   const file=input.files[0];if(!file)return;
   const badge=document.getElementById('file-badge');badge.textContent='📎 '+file.name;badge.style.display='inline-block';
-  const reader=new FileReader();
-  reader.onload=e=>{attachedFile={name:file.name,content:e.target.result.slice(0,8000)};};
-  reader.readAsText(file);input.value='';
+  new FileReader().onload=e=>{attachedFile={name:file.name,content:e.target.result.slice(0,8000)};};
+  new FileReader().readAsText(file);input.value='';
+  const reader=new FileReader();reader.onload=e=>{attachedFile={name:file.name,content:e.target.result.slice(0,8000)};};reader.readAsText(file);
 }
-
-// VOICE
 function toggleVoice(){
-  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){addMessage('agent','⚠️ Reconhecimento de voz não suportado neste navegador.',false);return;}
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){addMessage('agent','⚠️ Voz não suportada neste navegador.',false);return;}
   if(isRecording){recognition?.stop();return;}
   const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
-  recognition=new SR();recognition.lang='pt-BR';recognition.continuous=false;recognition.interimResults=false;
-  recognition.onstart=()=>{isRecording=true;document.getElementById('voice-btn').classList.add('recording');document.getElementById('voice-btn').textContent='🔴 Gravando...';};
+  recognition=new SR();recognition.lang='pt-BR';
+  recognition.onstart=()=>{isRecording=true;document.getElementById('voice-btn').classList.add('rec');document.getElementById('voice-btn').textContent='🔴 Gravando...';};
   recognition.onresult=e=>{document.getElementById('user-input').value=e.results[0][0].transcript;};
-  recognition.onend=()=>{isRecording=false;document.getElementById('voice-btn').classList.remove('recording');document.getElementById('voice-btn').textContent='🎤 Voz';};
+  recognition.onend=()=>{isRecording=false;document.getElementById('voice-btn').classList.remove('rec');document.getElementById('voice-btn').textContent='🎤 Voz';};
   recognition.start();
 }
-
-// TRANSLATE
 async function translateLast(){
-  const conv=getCurrentConv();if(!conv||!conv.messages.length){addMessage('agent','Nenhuma mensagem para traduzir.',false);return;}
+  const conv=getCurrentConv();if(!conv||!conv.messages.length)return;
   const last=conv.messages[conv.messages.length-1];
-  const isEn=/[a-zA-Z]{4,}/.test(last.content)&&!/[ã|ç|ê|é|ô|á|ó|ú|â]/.test(last.content);
-  const prompt=isEn?`Traduza para português brasileiro:\n\n${last.content}`:`Translate to English:\n\n${last.content}`;
-  document.getElementById('user-input').value=prompt;sendMessage();
+  const isEn=/[a-zA-Z]{4,}/.test(last.content)&&!/[ãçêéôáóúâ]/.test(last.content);
+  document.getElementById('user-input').value=isEn?`Traduza para português:\n${last.content}`:`Translate to English:\n${last.content}`;
+  sendMessage();
 }
-
-// EXPORT
 function exportConversation(){
-  const conv=getCurrentConv();if(!conv||!conv.messages.length){alert('Nenhuma conversa para exportar.');return;}
-  let md=`# Cyber Venum — Conversa\n**Data:** ${new Date().toLocaleString('pt-BR')}\n**Modo:** ${currentMode}\n\n---\n\n`;
+  const conv=getCurrentConv();if(!conv||!conv.messages.length){alert('Nada para exportar.');return;}
+  let md=`# Cyber Venum\n**Data:** ${new Date().toLocaleString('pt-BR')}\n\n---\n\n`;
   conv.messages.forEach(m=>{md+=m.role==='user'?`**Você:**\n${m.content}\n\n`:`**Cyber Venum:**\n${m.content}\n\n---\n\n`;});
-  const blob=new Blob([md],{type:'text/markdown'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`cybervenum-${Date.now()}.md`;a.click();
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([md],{type:'text/markdown'}));a.download=`cybervenum-${Date.now()}.md`;a.click();
 }
 
-// DASHBOARD
-let dashLoaded=false;
-async function loadDashboard(){
-  if(dashLoaded)return;dashLoaded=true;
-  const el=document.getElementById('dash-content');
-  try{
-    const resp=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:SESSION_TOKEN,mode:'chat',messages:[{role:'user',content:'Busque e liste: 1) Top 5 vulnerabilidades críticas divulgadas esta semana com CVE e CVSS, 2) Top 5 notícias críticas de cibersegurança hoje, 3) Top 3 grupos de ameaça/APT mais ativos atualmente. Seja conciso e direto.'}]})});
-    const data=await resp.json();
-    const text=data.content?.[0]?.text||'Sem dados.';
-    el.innerHTML=`<div class="dash-card"><h3>// Ameaças em Tempo Real <span class="dash-refresh" onclick="dashLoaded=false;loadDashboard()">↻ atualizar</span></h3><div class="dash-content">${escText(text)}</div><div class="dash-time">Atualizado: ${new Date().toLocaleTimeString('pt-BR')}</div></div>`;
-  }catch{el.innerHTML='<div class="dash-loading">⚠️ Erro ao carregar. Tente novamente.</div>';dashLoaded=false;}
-}
-
-// CHAT
+// ── CHAT ──────────────────────────────────────────────────────────────
 function escapeHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function formatResponse(text){
   text=text.replace(/```[\w]*\n?([\s\S]*?)```/g,(_,c)=>`<pre>${escapeHtml(c.trim())}<button class="copy-btn" onclick="copyCode(this)">copiar</button></pre>`);
@@ -527,10 +708,7 @@ function formatResponse(text){
   text=text.replace(/\n/g,'<br>');
   return DOMPurify.sanitize(text,{ALLOWED_TAGS:['strong','code','pre','br','button'],ALLOWED_ATTR:['class','onclick']});
 }
-function copyCode(btn){
-  const pre=btn.parentElement;const code=pre.textContent.replace('copiar','').trim();
-  navigator.clipboard.writeText(code).then(()=>{btn.textContent='✓ copiado!';setTimeout(()=>btn.textContent='copiar',2000);});
-}
+function copyCode(btn){const code=btn.parentElement.textContent.replace('copiar','').trim();navigator.clipboard.writeText(code).then(()=>{btn.textContent='✓';setTimeout(()=>btn.textContent='copiar',2000);});}
 function addMessage(role,html,isHtml){
   const chatBox=document.getElementById('chat-box');
   const wrap=document.createElement('div');wrap.className='msg '+(role==='user'?'user':'agent');
@@ -541,37 +719,33 @@ function addMessage(role,html,isHtml){
 }
 function showTyping(){
   const chatBox=document.getElementById('chat-box');
-  const wrap=document.createElement('div');wrap.className='msg agent';wrap.id='typing-indicator';
+  const w=document.createElement('div');w.className='msg agent';w.id='typing-indicator';
   const av=document.createElement('div');av.className='msg-avatar';av.textContent='🕷️';
   const b=document.createElement('div');b.className='bubble';b.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
-  wrap.appendChild(av);wrap.appendChild(b);chatBox.appendChild(wrap);chatBox.scrollTop=chatBox.scrollHeight;
+  w.appendChild(av);w.appendChild(b);chatBox.appendChild(w);chatBox.scrollTop=chatBox.scrollHeight;
 }
 function removeTyping(){const t=document.getElementById('typing-indicator');if(t)t.remove();}
 
 let lastSend=0;
-const input=document.getElementById('user-input');
+const chatInput=document.getElementById('user-input');
 const sendBtn=document.getElementById('send-btn');
 
 async function sendMessage(){
   if(!SESSION_TOKEN){addMessage('agent','⚠️ Sessão inválida.',false);return;}
   const now=Date.now();if(now-lastSend<1500)return;lastSend=now;
-  let text=input.value.trim();
+  let text=chatInput.value.trim();
   if(!text&&!attachedFile)return;
-  if(attachedFile){
-    text=text?`${text}\n\n--- Arquivo: ${attachedFile.name} ---\n${attachedFile.content}`:`Analise este arquivo (${attachedFile.name}):\n\n${attachedFile.content}`;
-    attachedFile=null;document.getElementById('file-badge').style.display='none';
-    if(currentMode==='chat')setMode('fileanalysis','FORENSE');
-  }
-  if(text.length>10000){addMessage('agent','⚠️ Mensagem muito longa.',false);return;}
-  input.value='';input.style.height='auto';sendBtn.disabled=true;
+  if(attachedFile){text=text?`${text}\n\n--- Arquivo: ${attachedFile.name} ---\n${attachedFile.content}`:`Analise este arquivo (${attachedFile.name}):\n\n${attachedFile.content}`;attachedFile=null;document.getElementById('file-badge').style.display='none';if(currentMode==='chat')setMode('fileanalysis','FORENSE');}
+  if(text.length>10000){addMessage('agent','⚠️ Muito longo.',false);return;}
+  chatInput.value='';chatInput.style.height='auto';sendBtn.disabled=true;
   const conv=getCurrentConv();if(!conv){newConversation();sendBtn.disabled=false;return;}
   conv.messages.push({role:'user',content:text});updateCurrentConv(conv.messages);
   addMessage('user',text,false);showTyping();
-  const isSearch=/notícia|noticia|news|cve|vulnerabilidade|recente|hoje|atual|último|ultimo|lançamento/i.test(text);
+  const isSearch=/notícia|noticia|news|cve|vulnerabilidade|recente|hoje|atual|último|lançamento/i.test(text);
   try{
     const resp=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages:conv.messages,token:SESSION_TOKEN,mode:currentMode})});
     const data=await resp.json();removeTyping();
-    if(resp.status===401){SESSION_TOKEN=null;addMessage('agent','⚠️ Sessão expirada. Recarregue.',false);sendBtn.disabled=false;return;}
+    if(resp.status===401){SESSION_TOKEN=null;addMessage('agent','⚠️ Sessão expirada.',false);sendBtn.disabled=false;return;}
     if(resp.status===429){addMessage('agent','⚠️ Muitas requisições. Aguarde.',false);sendBtn.disabled=false;return;}
     const reply=data.content?.map(b=>b.text||'').join('')||'Sem resposta.';
     conv.messages.push({role:'assistant',content:reply});updateCurrentConv(conv.messages);
@@ -579,23 +753,388 @@ async function sendMessage(){
     const wrap=document.createElement('div');wrap.className='msg agent';
     const av=document.createElement('div');av.className='msg-avatar';av.textContent='🕷️';
     const bWrap=document.createElement('div');
-    if(isSearch||data.searched){const badge=document.createElement('div');badge.className='badge search';badge.innerHTML='🔍 busca web em tempo real';bWrap.appendChild(badge);}
-    if(currentMode==='payload'){const badge=document.createElement('div');badge.className='badge payload';badge.textContent='⚠️ uso apenas em ambientes autorizados';bWrap.appendChild(badge);}
-    else if(currentMode!=='chat'){const badge=document.createElement('div');badge.className='badge mode';badge.textContent='modo '+currentMode;bWrap.appendChild(badge);}
+    if(isSearch||data.searched){const bd=document.createElement('div');bd.className='badge search';bd.innerHTML='🔍 busca web em tempo real';bWrap.appendChild(bd);}
+    if(currentMode==='payload'){const bd=document.createElement('div');bd.className='badge payload';bd.textContent='⚠️ uso apenas em ambientes autorizados';bWrap.appendChild(bd);}
+    else if(currentMode!=='chat'){const bd=document.createElement('div');bd.className='badge mode';bd.textContent='modo '+currentMode;bWrap.appendChild(bd);}
     const b=document.createElement('div');b.className='bubble';b.innerHTML=formatResponse(reply);
-    bWrap.appendChild(b);wrap.appendChild(av);wrap.appendChild(bWrap);
-    chatBox.appendChild(wrap);chatBox.scrollTop=chatBox.scrollHeight;
+    bWrap.appendChild(b);wrap.appendChild(av);wrap.appendChild(bWrap);chatBox.appendChild(wrap);chatBox.scrollTop=chatBox.scrollHeight;
   }catch{removeTyping();addMessage('agent','⚠️ Erro de conexão. Tente novamente.',false);}
   sendBtn.disabled=false;
 }
-function quickSend(text){input.value=text;sendMessage();}
-function q(text){switchTab('chat');setTimeout(()=>{input.value=text;sendMessage();},100);}
-input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
-input.addEventListener('input',()=>{input.style.height='auto';input.style.height=Math.min(input.scrollHeight,130)+'px';});
+function quickSend(text){chatInput.value=text;sendMessage();}
+function q(text){switchTab('chat');setTimeout(()=>{chatInput.value=text;sendMessage();},100);}
+chatInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMessage();}});
+chatInput.addEventListener('input',()=>{chatInput.style.height='auto';chatInput.style.height=Math.min(chatInput.scrollHeight,120)+'px';});
+
+// ── SCANNER ───────────────────────────────────────────────────────────
+async function runScan(){
+  const url=document.getElementById('scan-url').value.trim();if(!url)return;
+  const btn=document.getElementById('scan-btn');btn.disabled=true;btn.textContent='Escaneando...';
+  document.getElementById('scan-results').innerHTML='<div class="scan-loading">🔍 Analisando headers, cookies e configurações...</div>';
+  try{
+    const resp=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url,token:SESSION_TOKEN})});
+    const data=await resp.json();
+    if(data.error){document.getElementById('scan-results').innerHTML=`<div style="color:var(--danger);font-family:var(--mono);font-size:12px;padding:12px;">⚠️ ${data.error}</div>`;btn.disabled=false;btn.textContent='🔍 Escanear';return;}
+    const scoreColor=data.score>=80?'var(--ok)':data.score>=60?'#ffc832':data.score>=40?'#ff7833':'var(--danger)';
+    let html=`<div class="score-card" style="border-color:${scoreColor};">
+      <div class="score-circle" style="border-color:${scoreColor};">
+        <div class="score-num" style="color:${scoreColor}">${data.score}</div>
+        <div class="score-grade">${data.grade}</div>
+      </div>
+      <div class="score-info">
+        <h3>${escText(data.url)}</h3>
+        <p>Status: ${data.status||'N/A'} · ${data.checks.length} verificações · ${new Date(data.timestamp).toLocaleTimeString('pt-BR')}</p>
+        ${data.finalUrl&&data.finalUrl!==data.url?`<p style="color:var(--muted)">Redirecionado: ${escText(data.finalUrl)}</p>`:''}
+      </div>
+    </div>
+    <div class="checks-list" style="margin-top:10px;">`;
+    data.checks.sort((a,b)=>{const o={critical:0,high:1,medium:2,low:3,info:4};return (o[a.severity]||5)-(o[b.severity]||5);});
+    for(const c of data.checks){
+      const icon=c.passed?'✅':'❌';
+      html+=`<div class="check-item">
+        <div class="check-icon">${icon}</div>
+        <div class="check-info">
+          <div class="check-name">${escText(c.name)}</div>
+          <div class="check-detail">${escText(c.detail)}</div>
+          ${!c.passed&&c.impact?`<div class="check-impact">⚡ ${escText(c.impact)}</div>`:''}
+        </div>
+        <span class="sev-badge sev-${c.severity}">${c.severity}</span>
+      </div>`;
+    }
+    html+='</div>';
+    document.getElementById('scan-results').innerHTML=html;
+  }catch(e){document.getElementById('scan-results').innerHTML=`<div style="color:var(--danger);font-family:var(--mono);font-size:12px;padding:12px;">⚠️ Erro: ${e.message}</div>`;}
+  btn.disabled=false;btn.textContent='🔍 Escanear';
+}
+document.getElementById('scan-url').addEventListener('keydown',e=>{if(e.key==='Enter')runScan();});
+
+// ── REPUTATION ────────────────────────────────────────────────────────
+async function runReputation(){
+  const target=document.getElementById('rep-target').value.trim();if(!target)return;
+  const btn=document.getElementById('rep-btn');btn.disabled=true;btn.textContent='Consultando...';
+  document.getElementById('rep-results').innerHTML='<div class="scan-loading">🛡️ Consultando fontes de threat intelligence...</div>';
+  try{
+    const resp=await fetch('/api/reputation',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target,token:SESSION_TOKEN})});
+    const data=await resp.json();
+    let html='<div class="rep-sources">';
+    if(data.sources.abuseipdb){
+      const s=data.sources.abuseipdb;const danger=s.score>25;
+      html+=`<div class="rep-card"><h4>🔴 AbuseIPDB</h4>
+        <div class="rep-row"><span class="rep-key">Score de abuso</span><span class="rep-val ${danger?'danger':'ok'}">${s.score}%</span></div>
+        <div class="rep-row"><span class="rep-key">Total reportado</span><span class="rep-val">${s.totalReports}</span></div>
+        <div class="rep-row"><span class="rep-key">País</span><span class="rep-val">${s.country||'N/A'}</span></div>
+        <div class="rep-row"><span class="rep-key">ISP</span><span class="rep-val">${s.isp||'N/A'}</span></div>
+        ${s.lastReported?`<div class="rep-row"><span class="rep-key">Último report</span><span class="rep-val">${new Date(s.lastReported).toLocaleDateString('pt-BR')}</span></div>`:''}
+      </div>`;
+    }
+    if(data.sources.virustotal){
+      const s=data.sources.virustotal;const danger=s.malicious>2;
+      html+=`<div class="rep-card"><h4>🦠 VirusTotal</h4>
+        <div class="rep-row"><span class="rep-key">Malicioso</span><span class="rep-val ${danger?'danger':'ok'}">${s.malicious} engines</span></div>
+        <div class="rep-row"><span class="rep-key">Suspeito</span><span class="rep-val">${s.suspicious}</span></div>
+        <div class="rep-row"><span class="rep-key">Limpo</span><span class="rep-val ok">${s.harmless}</span></div>
+        <div class="rep-row"><span class="rep-key">Reputação</span><span class="rep-val">${s.reputation}</span></div>
+        ${s.country?`<div class="rep-row"><span class="rep-key">País</span><span class="rep-val">${s.country}</span></div>`:''}
+        ${s.asOwner?`<div class="rep-row"><span class="rep-key">AS Owner</span><span class="rep-val">${s.asOwner}</span></div>`:''}
+      </div>`;
+    }
+    if(data.sources.shodan){
+      const s=data.sources.shodan;
+      html+=`<div class="rep-card"><h4>🔭 Shodan</h4>
+        <div class="rep-row"><span class="rep-key">Organização</span><span class="rep-val">${s.org||'N/A'}</span></div>
+        <div class="rep-row"><span class="rep-key">País/Cidade</span><span class="rep-val">${s.country||'N/A'} / ${s.city||'N/A'}</span></div>
+        <div class="rep-row"><span class="rep-key">OS</span><span class="rep-val">${s.os||'N/A'}</span></div>
+        <div class="rep-row"><span class="rep-key">Portas abertas</span><span class="rep-val ${s.ports?.length>5?'danger':''}">${s.ports?.join(', ')||'N/A'}</span></div>
+        ${s.vulnerabilities?.length?`<div class="rep-row"><span class="rep-key">Vulnerabilidades</span><span class="rep-val danger">${s.vulnerabilities.join(', ')}</span></div>`:''}
+      </div>`;
+    }
+    if(data.sources.dns){
+      const s=data.sources.dns;
+      html+=`<div class="rep-card"><h4>🌐 DNS</h4>
+        ${s.answers.map(a=>`<div class="rep-row"><span class="rep-key">Tipo ${a.type}</span><span class="rep-val">${a.data}</span></div>`).join('')}
+        ${!s.answers.length?'<div style="font-size:11px;color:var(--muted);font-family:var(--mono);">Sem registros DNS encontrados</div>':''}
+      </div>`;
+    }
+    if(!Object.keys(data.sources).length){
+      html+=`<div style="font-size:12px;font-family:var(--mono);color:var(--muted);padding:20px;">Nenhuma API de reputação configurada. Adicione nas variáveis de ambiente da Vercel: ABUSEIPDB_KEY, VIRUSTOTAL_KEY, SHODAN_KEY</div>`;
+    }
+    html+='</div>';
+    document.getElementById('rep-results').innerHTML=html;
+  }catch(e){document.getElementById('rep-results').innerHTML=`<div style="color:var(--danger);font-family:var(--mono);font-size:12px;padding:12px;">⚠️ ${e.message}</div>`;}
+  btn.disabled=false;btn.textContent='🛡️ Analisar';
+}
+document.getElementById('rep-target').addEventListener('keydown',e=>{if(e.key==='Enter')runReputation();});
+
+// ── CVE LIVE ──────────────────────────────────────────────────────────
+let cveLoaded=false;
+async function loadCVEs(force=false){
+  if(cveLoaded&&!force)return;cveLoaded=true;
+  const el=document.getElementById('cve-list');
+  el.innerHTML='<div class="scan-loading">🔄 Buscando CVEs críticos das últimas 24h...</div>';
+  try{
+    const resp=await fetch(`/api/cve-notify?token=${SESSION_TOKEN}`);
+    const data=await resp.json();
+    if(data.error){el.innerHTML=`<div style="color:var(--muted);font-family:var(--mono);font-size:11px;padding:12px">${data.error}</div>`;return;}
+    document.getElementById('cve-updated').textContent=`Atualizado: ${new Date(data.updated).toLocaleTimeString('pt-BR')} · ${data.total} CVEs críticos`;
+    if(!data.cves.length){el.innerHTML='<div style="font-size:12px;font-family:var(--mono);color:var(--muted);padding:12px">Nenhum CVE crítico nas últimas 24h. ✅</div>';return;}
+    // Bell notification
+    const count=document.getElementById('cve-count');count.style.display='flex';count.textContent=data.cves.length;
+    el.innerHTML=data.cves.map(cve=>`
+      <div class="cve-card">
+        <div class="cve-header">
+          <span class="cve-id">${escText(cve.id)}</span>
+          ${cve.cvss?`<span class="cve-score">CVSS ${cve.cvss}</span>`:''}
+          <span class="cve-date">${new Date(cve.published).toLocaleDateString('pt-BR')}</span>
+        </div>
+        <div class="cve-desc">${escText(cve.description)}</div>
+        ${cve.references.length?`<div class="cve-refs">${cve.references.map(r=>`<a class="cve-ref" href="${escText(r)}" target="_blank" rel="noopener">→ Referência</a>`).join('')}</div>`:''}
+      </div>`).join('');
+  }catch(e){el.innerHTML=`<div style="color:var(--danger);font-family:var(--mono);font-size:11px;padding:12px">⚠️ ${e.message}</div>`;cveLoaded=false;}
+}
+
+// Notificações push de CVE
+function startCVENotifications(){
+  if(!('Notification' in window))return;
+  Notification.requestPermission();
+  setInterval(async()=>{
+    try{
+      const resp=await fetch(`/api/cve-notify?token=${SESSION_TOKEN}`);
+      const data=await resp.json();
+      if(data.cves?.length>0){
+        const count=document.getElementById('cve-count');count.style.display='flex';count.textContent=data.cves.length;
+        if(Notification.permission==='granted'&&data.cves.length>0){
+          new Notification('🚨 Cyber Venum — CVE Crítico',{body:`${data.cves.length} CVE(s) crítico(s) detectado(s) nas últimas 24h!`,icon:'/favicon.svg'});
+        }
+      }
+    }catch{}
+  }, 30*60*1000); // a cada 30 min
+}
+
+// ── LAB GENERATOR ─────────────────────────────────────────────────────
+function setLabTopic(topic){document.getElementById('lab-topic').value=topic;}
+async function generateLab(){
+  const topic=document.getElementById('lab-topic').value.trim();if(!topic)return;
+  const btn=document.getElementById('lab-btn');btn.disabled=true;btn.textContent='Gerando...';
+  document.getElementById('lab-result').innerHTML='<div class="scan-loading">🧪 Gerando ambiente Docker personalizado...</div>';
+  try{
+    const resp=await fetch('/api/lab',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({topic,token:SESSION_TOKEN})});
+    const data=await resp.json();
+    if(data.error){document.getElementById('lab-result').innerHTML=`<div style="color:var(--danger);font-family:var(--mono);font-size:12px;padding:12px">⚠️ ${data.error}</div>`;btn.disabled=false;btn.textContent='🧪 Gerar Lab';return;}
+    const compose=escText(data.docker_compose||'# docker-compose.yml não gerado');
+    let html=`<div class="lab-result">
+      <h3>🧪 ${escText(data.title||topic)}</h3>
+      <div class="lab-meta">
+        <span class="lab-badge">⏱️ ${escText(data.estimated_time||'N/A')}</span>
+        <span class="lab-badge">📊 ${escText(data.difficulty||'N/A')}</span>
+        ${data.tools_needed?.map(t=>`<span class="lab-badge">🔧 ${escText(t)}</span>`).join('')||''}
+      </div>
+      <p style="font-size:12px;font-family:var(--mono);color:var(--muted);margin-bottom:12px">${escText(data.description||'')}</p>
+      ${data.objectives?.length?`<div class="lab-section"><h4>// Objetivos</h4><ul class="lab-list">${data.objectives.map(o=>`<li>${escText(o)}</li>`).join('')}</ul></div>`:''}
+      <div class="lab-section"><h4>// docker-compose.yml <button class="copy-btn" style="position:static;margin-left:8px;" onclick="navigator.clipboard.writeText(document.getElementById('lab-compose-text').textContent)">copiar</button></h4>
+        <div class="lab-compose" id="lab-compose-text">${compose}</div>
+      </div>
+      ${data.hints?.length?`<div class="lab-section"><h4>// Dicas</h4><ul class="lab-list">${data.hints.map(h=>`<li>${escText(h)}</li>`).join('')}</ul></div>`:''}
+      ${data.flags?.length?`<div class="lab-section"><h4>// Flags esperadas</h4><ul class="lab-list">${data.flags.map(f=>`<li style="color:var(--ok)">${escText(f)}</li>`).join('')}</ul></div>`:''}
+      <div style="font-size:11px;font-family:var(--mono);color:var(--muted);margin-top:12px;padding:8px;border:1px solid var(--border);border-radius:4px;">
+        💡 Como usar: copie o docker-compose.yml → salve como <code>docker-compose.yml</code> → rode <code>docker-compose up -d</code>
+      </div>
+    </div>`;
+    document.getElementById('lab-result').innerHTML=html;
+  }catch(e){document.getElementById('lab-result').innerHTML=`<div style="color:var(--danger);font-family:var(--mono);font-size:12px;padding:12px">⚠️ ${e.message}</div>`;}
+  btn.disabled=false;btn.textContent='🧪 Gerar Lab';
+}
+document.getElementById('lab-topic').addEventListener('keydown',e=>{if(e.key==='Enter')generateLab();});
+
+// ── TERMINAL ──────────────────────────────────────────────────────────
+const termBox=document.getElementById('terminal-box');
+const termInput=document.getElementById('term-input');
+let termHistory=[],termHistIdx=-1;
+
+function termPrint(text,cls='out'){const d=document.createElement('div');d.className='term-line '+cls;d.textContent=text;termBox.appendChild(d);termBox.scrollTop=termBox.scrollHeight;}
+function termHtml(html){const d=document.createElement('div');d.className='term-line info';d.innerHTML=DOMPurify.sanitize(html,{ALLOWED_TAGS:['span','strong','br'],ALLOWED_ATTR:['style']});termBox.appendChild(d);termBox.scrollTop=termBox.scrollHeight;}
+
+const TERM_CMDS={
+  help:()=>{termPrint('Comandos disponíveis:','info');['whois <domain>','dig <domain> [type]','nslookup <domain>','ping <host>','curl-headers <url>','traceroute <host>','encode <text>','decode-base64 <text>','hash <text>','ip-info <ip>','clear','help'].forEach(c=>termPrint('  '+c));},
+  clear:()=>{termBox.innerHTML='';},
+  async whois(args){
+    const d=args[0];if(!d){termPrint('Uso: whois <domínio>','err');return;}
+    termPrint(`Consultando WHOIS para ${d}...`);
+    try{const r=await fetch(`https://rdap.org/domain/${d}`);const data=await r.json();
+      termPrint(`Domínio: ${data.ldhName||d}`,'ok');
+      termPrint(`Status: ${data.status?.join(', ')||'N/A'}`);
+      data.nameservers?.forEach(ns=>termPrint(`NS: ${ns.ldhName}`));
+      termPrint(`Eventos: ${data.events?.map(e=>`${e.eventAction}: ${new Date(e.eventDate).toLocaleDateString('pt-BR')}`).join(' | ')||'N/A'}`);
+    }catch{termPrint('Erro ao consultar WHOIS','err');}
+  },
+  async dig(args){
+    const [d,type='A']=args;if(!d){termPrint('Uso: dig <domínio> [tipo]','err');return;}
+    termPrint(`Consultando DNS ${type} para ${d}...`);
+    try{const r=await fetch(`https://dns.google/resolve?name=${d}&type=${type}`);const data=await r.json();
+      if(data.Answer?.length){data.Answer.forEach(a=>termPrint(`${a.name} → ${a.data} (TTL: ${a.TTL})`,'ok'));}
+      else termPrint('Sem registros encontrados.');
+    }catch{termPrint('Erro DNS','err');}
+  },
+  async nslookup(args){
+    const d=args[0];if(!d){termPrint('Uso: nslookup <domínio>','err');return;}
+    await TERM_CMDS.dig([d,'A']);await TERM_CMDS.dig([d,'MX']);await TERM_CMDS.dig([d,'TXT']);
+  },
+  async ping(args){
+    const h=args[0];if(!h){termPrint('Uso: ping <host>','err');return;}
+    termPrint(`Simulando ping para ${h}...`);
+    for(let i=0;i<4;i++){const lat=Math.floor(Math.random()*80+10);termPrint(`64 bytes from ${h}: icmp_seq=${i} ttl=64 time=${lat} ms`,'ok');await new Promise(r=>setTimeout(r,500));}
+    termPrint('Simulação completa (ping real requer acesso de rede nativo)');
+  },
+  async 'curl-headers'(args){
+    const u=args[0];if(!u){termPrint('Uso: curl-headers <url>','err');return;}
+    termPrint(`Buscando headers de ${u}...`);
+    try{
+      const resp=await fetch('/api/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({url:u,token:SESSION_TOKEN})});
+      const data=await resp.json();
+      if(data.checks){data.checks.forEach(c=>termPrint(`${c.passed?'✓':'✗'} ${c.name}: ${c.detail}`,c.passed?'ok':c.severity==='critical'?'err':'out'));}
+    }catch{termPrint('Erro ao buscar headers','err');}
+  },
+  async traceroute(args){
+    const h=args[0];if(!h){termPrint('Uso: traceroute <host>','err');return;}
+    termPrint(`Traceroute simulado para ${h}:`);
+    const hops=Math.floor(Math.random()*8+5);
+    for(let i=1;i<=hops;i++){const ip=`${Math.floor(Math.random()*200+1)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`;const ms=Math.floor(Math.random()*30+i*3);termPrint(`${i.toString().padStart(2)} ${ip.padEnd(18)} ${ms} ms`);await new Promise(r=>setTimeout(r,200));}
+    termPrint(`${hops+1} ${h} destino atingido`,'ok');
+  },
+  encode(args){const text=args.join(' ');if(!text){termPrint('Uso: encode <texto>','err');return;}termPrint('Base64: '+btoa(unescape(encodeURIComponent(text))),'ok');termPrint('URL: '+encodeURIComponent(text),'ok');termPrint('Hex: '+Array.from(new TextEncoder().encode(text)).map(b=>b.toString(16).padStart(2,'0')).join(''),'ok');},
+  'decode-base64'(args){const text=args.join(' ');try{termPrint(decodeURIComponent(escape(atob(text))),'ok');}catch{termPrint('Erro: Base64 inválido','err');}},
+  async hash(args){
+    const text=args.join(' ');if(!text){termPrint('Uso: hash <texto>','err');return;}
+    const enc=new TextEncoder();const data=enc.encode(text);
+    const [sha1,sha256,sha512]=await Promise.all(['SHA-1','SHA-256','SHA-512'].map(a=>crypto.subtle.digest(a,data).then(h=>Array.from(new Uint8Array(h)).map(b=>b.toString(16).padStart(2,'0')).join(''))));
+    termPrint(`SHA-1:   ${sha1}`,'ok');termPrint(`SHA-256: ${sha256}`,'ok');termPrint(`SHA-512: ${sha512}`,'ok');
+  },
+  async 'ip-info'(args){
+    const ip=args[0];if(!ip){termPrint('Uso: ip-info <ip>','err');return;}
+    termPrint(`Buscando informações para ${ip}...`);
+    try{const r=await fetch(`https://ipapi.co/${ip}/json/`);const d=await r.json();
+      termPrint(`IP: ${d.ip}`,'ok');termPrint(`País: ${d.country_name} (${d.country_code})`);termPrint(`Cidade: ${d.city}, ${d.region}`);termPrint(`Org: ${d.org}`);termPrint(`ASN: ${d.asn}`);termPrint(`Timezone: ${d.timezone}`);
+    }catch{termPrint('Erro ao buscar informações de IP','err');}
+  }
+};
+
+async function runTermCmd(cmd){
+  const parts=cmd.trim().split(/\s+/);const name=parts[0].toLowerCase();const args=parts.slice(1);
+  if(TERM_CMDS[name]){try{await TERM_CMDS[name](args);}catch(e){termPrint('Erro: '+e.message,'err');}}
+  else if(name)termPrint(`Comando não encontrado: ${name}. Digite 'help'`,'err');
+}
+
+termInput.addEventListener('keydown',async e=>{
+  if(e.key==='Enter'){const cmd=termInput.value.trim();if(!cmd)return;termHistory.unshift(cmd);termHistIdx=-1;termPrint(`cyber-venum@proxybt:~$ ${cmd}`,'term-line');termInput.value='';await runTermCmd(cmd);}
+  else if(e.key==='ArrowUp'){if(termHistIdx<termHistory.length-1){termHistIdx++;termInput.value=termHistory[termHistIdx]||'';}}
+  else if(e.key==='ArrowDown'){if(termHistIdx>0){termHistIdx--;termInput.value=termHistory[termHistIdx]||'';}else{termHistIdx=-1;termInput.value='';}}
+});
+
+// Inicializar terminal
+termPrint('Cyber Venum Terminal v1.0 — ProxyBT','info');
+termPrint('Digite help para ver os comandos disponíveis.','info');
+termPrint('');
+
+// ── MULTIPLAYER ───────────────────────────────────────────────────────
+async function apiRoom(body){
+  const resp=await fetch('/api/room',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...body,token:SESSION_TOKEN})});
+  return resp.json();
+}
+
+async function loadRooms(){refreshRooms();}
+async function refreshRooms(){
+  try{
+    const data=await apiRoom({action:'list'});
+    const el=document.getElementById('room-list');
+    if(!data.rooms?.length){el.innerHTML='<div style="font-size:11px;font-family:var(--mono);color:var(--muted);text-align:center;padding:20px">Nenhuma sala ativa. Crie uma!</div>';return;}
+    el.innerHTML=data.rooms.map(r=>`
+      <div class="room-item" onclick="joinRoom('${r.id}')">
+        <div class="room-item-name">${escText(r.name)} ${r.solved?'✅':''}</div>
+        <div class="room-item-meta">Código: ${r.id} · ${r.users} jogador(es)</div>
+        <div class="room-item-meta" style="color:var(--muted)">${escText(r.challenge)}</div>
+      </div>`).join('');
+  }catch{}
+}
+
+async function createRoom(){
+  const name=document.getElementById('room-name').value.trim()||'CTF Room';
+  const challenge=document.getElementById('room-challenge').value.trim()||'Desafio livre — encontre a flag!';
+  try{const data=await apiRoom({action:'create',name,challenge});if(data.roomId)joinRoom(data.roomId);}catch{}
+}
+async function joinRoomByCode(){
+  const code=document.getElementById('room-code').value.trim().toUpperCase();
+  if(code)joinRoom(code);
+}
+async function joinRoom(roomId){
+  const userName=document.getElementById('mp-username').value.trim()||'Hacker';
+  try{
+    const data=await apiRoom({action:'join',roomId,userId:MY_USER_ID,userName});
+    if(!data.ok&&!data.room){alert('Sala não encontrada!');return;}
+    currentRoomId=roomId;
+    document.getElementById('mp-lobby').style.display='none';
+    document.getElementById('mp-room').style.display='flex';
+    document.getElementById('room-title-display').textContent=data.room?.name||roomId;
+    document.getElementById('room-code-display').textContent=roomId;
+    document.getElementById('challenge-display').textContent=data.room?.challenge||'';
+    document.getElementById('mp-chat').innerHTML='';
+    lastMsgTs=0;
+    if(mpPollInterval)clearInterval(mpPollInterval);
+    mpPollInterval=setInterval(pollRoom,2000);
+    pollRoom();
+  }catch(e){alert('Erro ao entrar: '+e.message);}
+}
+async function pollRoom(){
+  if(!currentRoomId)return;
+  try{
+    const resp=await fetch(`/api/room?token=${SESSION_TOKEN}&roomId=${currentRoomId}&since=${lastMsgTs}`);
+    const data=await resp.json();if(!data.ok)return;
+    const room=data.room;
+    // Render players
+    const players=room.users||[];
+    document.getElementById('players-list').innerHTML=players.map(p=>`<div class="player-item"><span class="player-name">${escText(p.name)}</span><span class="player-pts">${p.points||0} pts</span></div>`).join('')||'<div style="font-size:11px;font-family:var(--mono);color:var(--muted)">Nenhum jogador</div>';
+    // Render new messages
+    const chat=document.getElementById('mp-chat');
+    for(const msg of room.messages||[]){
+      if(msg.ts<=lastMsgTs)continue;
+      lastMsgTs=Math.max(lastMsgTs,msg.ts);
+      const d=document.createElement('div');d.className='mp-msg '+(msg.type==='system'?'system':'chat');
+      d.innerHTML=msg.type==='chat'?`<span class="mp-user">${escText(msg.userName)}:</span> ${escText(msg.text)}`:escText(msg.text);
+      chat.appendChild(d);chat.scrollTop=chat.scrollHeight;
+    }
+    if(room.solved){document.getElementById('challenge-display').style.color='var(--ok)';}
+  }catch{}
+}
+async function sendMpMsg(){
+  const text=document.getElementById('mp-msg').value.trim();if(!text||!currentRoomId)return;
+  const userName=document.getElementById('mp-username').value.trim()||'Hacker';
+  document.getElementById('mp-msg').value='';
+  try{await apiRoom({action:'message',roomId:currentRoomId,userId:MY_USER_ID,userName,text});}catch{}
+}
+async function submitFlag(){
+  const flag=document.getElementById('flag-input').value.trim();if(!flag)return;
+  const userName=document.getElementById('mp-username').value.trim()||'Hacker';
+  try{
+    const data=await apiRoom({action:'submit_flag',roomId:currentRoomId,userId:MY_USER_ID,userName,flag});
+    const el=document.getElementById('flag-result');
+    el.textContent=data.message;el.style.color=data.correct?'var(--ok)':'var(--danger)';
+  }catch{}
+}
+async function leaveRoom(){
+  if(!currentRoomId)return;
+  const userName=document.getElementById('mp-username').value.trim()||'Hacker';
+  try{await apiRoom({action:'leave',roomId:currentRoomId,userId:MY_USER_ID,userName});}catch{}
+  if(mpPollInterval)clearInterval(mpPollInterval);mpPollInterval=null;currentRoomId=null;
+  document.getElementById('mp-lobby').style.display='flex';
+  document.getElementById('mp-room').style.display='none';
+  refreshRooms();
+}
+document.getElementById('mp-msg').addEventListener('keydown',e=>{if(e.key==='Enter')sendMpMsg();});
+
+// ── TABS ──────────────────────────────────────────────────────────────
 function switchTab(name){
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['chat','ref','tools','dashboard'][i]===name));
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['chat','scanner','reputation','cve','lab','terminal','multiplayer','ref','tools'][i]===name));
   document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+name));
 }
+
 renderChips();
 </script>
 </body>
