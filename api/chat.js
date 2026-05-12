@@ -1,6 +1,16 @@
 export default async function handler(req, res) {
 
-  // Permitir apenas POST
+  // CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // OPTIONS
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  // Apenas POST
   if (req.method !== 'POST') {
     return res.status(405).json({
       error: 'Método não permitido'
@@ -9,14 +19,13 @@ export default async function handler(req, res) {
 
   try {
 
-    // Body recebido
+    // Body
     const body = req.body || {};
 
     const message = body.message || '';
-    const mode = body.mode || 'default';
 
-    // Verificar mensagem
-    if (!message || message.trim() === '') {
+    // Verifica mensagem
+    if (!message.trim()) {
       return res.status(400).json({
         error: 'Mensagem vazia'
       });
@@ -27,12 +36,12 @@ export default async function handler(req, res) {
 
     if (!apiKey) {
       return res.status(500).json({
-        error: 'OPENROUTER_API_KEY não configurada'
+        error: 'OPENROUTER_API_KEY não encontrada'
       });
     }
 
-    // Prompt principal
-    let systemPrompt = `
+    // Prompt
+    const systemPrompt = `
 Você é CyberVenum AI.
 
 Especialista em:
@@ -42,38 +51,13 @@ Especialista em:
 - SOC
 - Linux
 - Networking
-- Threat Intelligence
 - Ethical Hacking
 
-Sempre responda em português brasileiro.
+Responda SEMPRE em português brasileiro.
 `;
-
-    // Payload mode
-    if (mode === 'payload') {
-
-      systemPrompt += `
-
-Modo Payload:
-Forneça apenas exemplos educacionais,
-CTF e laboratoriais.
-`;
-
-    }
-
-    // RedTeam mode
-    if (mode === 'redteam') {
-
-      systemPrompt += `
-
-Modo Red Team:
-Foque em ambientes autorizados,
-simulações defensivas e laboratórios.
-`;
-
-    }
 
     // Request OpenRouter
-    const response = await fetch(
+    const aiResponse = await fetch(
       'https://openrouter.ai/api/v1/chat/completions',
       {
         method: 'POST',
@@ -87,7 +71,8 @@ simulações defensivas e laboratórios.
 
         body: JSON.stringify({
 
-          model: 'openai/gpt-4o-mini',
+          // MODELO MAIS ESTÁVEL
+          model: 'meta-llama/llama-3.1-8b-instruct:free',
 
           messages: [
             {
@@ -101,96 +86,95 @@ simulações defensivas e laboratórios.
           ],
 
           temperature: 0.7,
-          max_tokens: 1200
+          max_tokens: 1000
 
         })
 
       }
     );
 
-    // Texto bruto
-    const rawText = await response.text();
+    // RAW
+    const raw = await aiResponse.text();
 
-    // Debug
-    console.log('RAW OPENROUTER:', rawText);
+    console.log('RAW OPENROUTER:', raw);
 
-    // Converter JSON
+    // JSON
     let data;
 
     try {
 
-      data = JSON.parse(rawText);
+      data = JSON.parse(raw);
 
-    } catch (jsonError) {
-
-      console.error('Erro JSON:', jsonError);
+    } catch (e) {
 
       return res.status(500).json({
-        error: 'Resposta inválida da IA',
-        raw: rawText
+        error: 'Erro convertendo JSON',
+        raw
       });
 
     }
 
-    // Verifica erro API
-    if (!response.ok) {
+    // Erro OpenRouter
+    if (!aiResponse.ok) {
 
-      console.error('Erro OpenRouter:', data);
-
-      return res.status(response.status).json({
+      return res.status(aiResponse.status).json({
         error: data
       });
 
     }
 
-    // Resposta final IA
-    let reply = 'Sem resposta da IA';
+    // DEBUG
+    console.log(
+      'DATA:',
+      JSON.stringify(data, null, 2)
+    );
 
-    // Formato OpenAI/OpenRouter
+    // Resposta
+    let reply = '';
+
+    // OpenAI/OpenRouter
     if (
-      data &&
       data.choices &&
-      data.choices.length > 0
+      data.choices[0] &&
+      data.choices[0].message &&
+      data.choices[0].message.content
     ) {
 
-      // GPT/OpenAI format
-      if (
-        data.choices[0].message &&
-        data.choices[0].message.content
-      ) {
-
-        reply = data.choices[0].message.content;
-
-      }
-
-      // fallback text
-      else if (data.choices[0].text) {
-
-        reply = data.choices[0].text;
-
-      }
+      reply = data.choices[0].message.content;
 
     }
 
-    // Segurança extra
+    // fallback text
+    else if (
+      data.choices &&
+      data.choices[0] &&
+      data.choices[0].text
+    ) {
+
+      reply = data.choices[0].text;
+
+    }
+
+    // fallback final
     if (!reply || reply.trim() === '') {
-      reply = 'A IA não retornou conteúdo.';
+
+      console.log('RESPOSTA VAZIA:', data);
+
+      reply = 'A IA respondeu vazio. Verifique logs da Vercel.';
+
     }
 
-    // Debug final
-    console.log('REPLY FINAL:', reply);
-
-    // Retorno
+    // Final
     return res.status(200).json({
       reply
     });
 
   } catch (error) {
 
-    console.error('ERRO INTERNO:', error);
+    console.error('ERRO GERAL:', error);
 
     return res.status(500).json({
-      error: error.message || 'Erro interno'
+      error: error.message
     });
 
   }
