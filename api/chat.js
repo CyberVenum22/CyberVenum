@@ -238,17 +238,17 @@ Foque em:
     // FORMATO ORIGINAL FRONTEND
     // =========================
 
-    return res.status(200).json({
+   return res.status(200).json({
 
-      content: [
-        {
-          text: reply
-        }
-      ],
+  content: [
+    {
+      text: reply
+    }
+  ],
 
-      searched: false
+  searched: false
 
-    });
+});
 
   } catch (error) {
 
