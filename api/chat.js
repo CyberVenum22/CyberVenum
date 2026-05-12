@@ -84,7 +84,7 @@ Especialista em:
 Sempre responda em português brasileiro.
 `;
 
-    // Payload
+    // Payload mode
     if (mode === 'payload') {
 
       systemPrompt += `
@@ -96,7 +96,7 @@ laboratoriais e CTF.
 
     }
 
-    // RedTeam
+    // RedTeam mode
     if (mode === 'redteam') {
 
       systemPrompt += `
@@ -122,7 +122,6 @@ simulações defensivas e laboratórios.
 
           'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
-
           'HTTP-Referer': 'https://cybervenum.vercel.app',
           'X-Title': 'CyberVenum'
 
@@ -130,7 +129,7 @@ simulações defensivas e laboratórios.
 
         body: JSON.stringify({
 
-          // MODELO FREE E ESTÁVEL
+          // MODELO FREE
           model: 'meta-llama/llama-3.1-8b-instruct:free',
 
           messages: [
@@ -201,15 +200,6 @@ simulações defensivas e laboratórios.
     }
 
     // =========================
-    // DEBUG
-    // =========================
-
-    console.log(
-      'DATA:',
-      JSON.stringify(data, null, 2)
-    );
-
-    // =========================
     // RESPOSTA IA
     // =========================
 
@@ -257,13 +247,16 @@ simulações defensivas e laboratórios.
     // RETORNO FINAL
     // =========================
 
+    // FORMATO ORIGINAL DO SEU FRONTEND
     return res.status(200).json({
-  content: [
-    {
-      text: reply
-    }
-  ]
-});
+
+      content: [
+        {
+          text: reply
+        }
+      ]
+
+    });
 
   } catch (error) {
 
