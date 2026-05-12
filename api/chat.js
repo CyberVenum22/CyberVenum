@@ -258,8 +258,12 @@ simulações defensivas e laboratórios.
     // =========================
 
     return res.status(200).json({
-      reply
-    });
+  content: [
+    {
+      text: reply
+    }
+  ]
+});
 
   } catch (error) {
 
