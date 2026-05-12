@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
 
-  // Apenas POST
+  // Permitir apenas POST
   if (req.method !== 'POST') {
     return res.status(405).json({
       error: 'Método não permitido'
@@ -9,13 +9,16 @@ export default async function handler(req, res) {
 
   try {
 
-    // Dados recebidos
-    const { message, mode } = req.body;
+    // Body recebido
+    const body = req.body || {};
 
-    // Verifica mensagem
-    if (!message) {
+    const message = body.message || '';
+    const mode = body.mode || 'default';
+
+    // Verificar mensagem
+    if (!message || message.trim() === '') {
       return res.status(400).json({
-        error: 'Mensagem não enviada'
+        error: 'Mensagem vazia'
       });
     }
 
@@ -34,34 +37,42 @@ Você é CyberVenum AI.
 
 Especialista em:
 - Cybersecurity
-- Blue Team
 - Red Team
+- Blue Team
 - SOC
-- Threat Intelligence
 - Linux
 - Networking
+- Threat Intelligence
 - Ethical Hacking
 
 Sempre responda em português brasileiro.
 `;
 
-    // Modo Payload
+    // Payload mode
     if (mode === 'payload') {
+
       systemPrompt += `
+
 Modo Payload:
-Forneça apenas exemplos educacionais e laboratoriais.
+Forneça apenas exemplos educacionais,
+CTF e laboratoriais.
 `;
+
     }
 
-    // Modo RedTeam
+    // RedTeam mode
     if (mode === 'redteam') {
+
       systemPrompt += `
+
 Modo Red Team:
-Foque em laboratórios, CTF e ambientes autorizados.
+Foque em ambientes autorizados,
+simulações defensivas e laboratórios.
 `;
+
     }
 
-    // Chamada OpenRouter
+    // Request OpenRouter
     const response = await fetch(
       'https://openrouter.ai/api/v1/chat/completions',
       {
@@ -90,33 +101,38 @@ Foque em laboratórios, CTF e ambientes autorizados.
           ],
 
           temperature: 0.7,
-          max_tokens: 1500
+          max_tokens: 1200
 
         })
+
       }
     );
 
     // Texto bruto
-    const text = await response.text();
+    const rawText = await response.text();
+
+    // Debug
+    console.log('RAW OPENROUTER:', rawText);
 
     // Converter JSON
     let data;
 
     try {
 
-      data = JSON.parse(text);
+      data = JSON.parse(rawText);
 
-    } catch (parseError) {
+    } catch (jsonError) {
 
-      console.error('Erro JSON:', text);
+      console.error('Erro JSON:', jsonError);
 
       return res.status(500).json({
         error: 'Resposta inválida da IA',
-        raw: text
+        raw: rawText
       });
+
     }
 
-    // Erro API
+    // Verifica erro API
     if (!response.ok) {
 
       console.error('Erro OpenRouter:', data);
@@ -124,24 +140,59 @@ Foque em laboratórios, CTF e ambientes autorizados.
       return res.status(response.status).json({
         error: data
       });
+
     }
 
-    // Resposta IA
-    const reply =
-      data?.choices?.[0]?.message?.content ||
-      'Sem resposta da IA';
+    // Resposta final IA
+    let reply = 'Sem resposta da IA';
 
-    // Resposta final
+    // Formato OpenAI/OpenRouter
+    if (
+      data &&
+      data.choices &&
+      data.choices.length > 0
+    ) {
+
+      // GPT/OpenAI format
+      if (
+        data.choices[0].message &&
+        data.choices[0].message.content
+      ) {
+
+        reply = data.choices[0].message.content;
+
+      }
+
+      // fallback text
+      else if (data.choices[0].text) {
+
+        reply = data.choices[0].text;
+
+      }
+
+    }
+
+    // Segurança extra
+    if (!reply || reply.trim() === '') {
+      reply = 'A IA não retornou conteúdo.';
+    }
+
+    // Debug final
+    console.log('REPLY FINAL:', reply);
+
+    // Retorno
     return res.status(200).json({
       reply
     });
 
   } catch (error) {
 
-    console.error('Erro interno:', error);
+    console.error('ERRO INTERNO:', error);
 
     return res.status(500).json({
-      error: error.message
+      error: error.message || 'Erro interno'
     });
+
   }
+
 }
