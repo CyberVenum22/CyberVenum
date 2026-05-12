@@ -1,4 +1,4 @@
-// api/chat.js
+const RATE_LIMIT = {};
 
 export default async function handler(req, res) {
 
@@ -10,7 +10,6 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  // OPTIONS
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
@@ -35,17 +34,17 @@ export default async function handler(req, res) {
 
     const body = req.body || {};
 
-    const message = body.message || '';
+    const messages = body.messages || [];
     const mode = body.mode || 'default';
 
     // =========================
-    // VALIDAÇÃO
+    // VALIDAR MENSAGENS
     // =========================
 
-    if (!message || message.trim() === '') {
+    if (!Array.isArray(messages) || messages.length === 0) {
 
       return res.status(400).json({
-        error: 'Mensagem vazia'
+        error: 'Mensagens inválidas'
       });
 
     }
@@ -65,11 +64,11 @@ export default async function handler(req, res) {
     }
 
     // =========================
-    // PROMPT
+    // SYSTEM PROMPT
     // =========================
 
     let systemPrompt = `
-Você é CyberVenum AI.
+Você é Cyber Venum.
 
 Especialista em:
 - Cybersecurity
@@ -89,9 +88,11 @@ Sempre responda em português brasileiro.
 
       systemPrompt += `
 
-Modo Payload:
-Forneça apenas exemplos educacionais,
-laboratoriais e CTF.
+MODO PAYLOAD:
+Forneça exemplos apenas para:
+- laboratórios
+- CTF
+- ambientes autorizados
 `;
 
     }
@@ -101,18 +102,45 @@ laboratoriais e CTF.
 
       systemPrompt += `
 
-Modo Red Team:
-Foque em ambientes autorizados,
-simulações defensivas e laboratórios.
+MODO RED TEAM:
+Foque em:
+- simulações defensivas
+- ambientes autorizados
+- laboratórios
 `;
 
     }
 
     // =========================
-    // OPENROUTER REQUEST
+    // MESSAGES FORMAT
     // =========================
 
-    const aiResponse = await fetch(
+    const formattedMessages = [
+
+      {
+        role: 'system',
+        content: systemPrompt
+      },
+
+      ...messages.map(m => ({
+        role:
+          m.role === 'assistant'
+            ? 'assistant'
+            : 'user',
+
+        content:
+          typeof m.content === 'string'
+            ? m.content
+            : JSON.stringify(m.content)
+      }))
+
+    ];
+
+    // =========================
+    // OPENROUTER
+    // =========================
+
+    const response = await fetch(
       'https://openrouter.ai/api/v1/chat/completions',
       {
 
@@ -122,6 +150,7 @@ simulações defensivas e laboratórios.
 
           'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
+
           'HTTP-Referer': 'https://cybervenum.vercel.app',
           'X-Title': 'CyberVenum'
 
@@ -129,25 +158,12 @@ simulações defensivas e laboratórios.
 
         body: JSON.stringify({
 
-          // MODELO FREE
           model: 'meta-llama/llama-3.1-8b-instruct:free',
 
-          messages: [
-
-            {
-              role: 'system',
-              content: systemPrompt
-            },
-
-            {
-              role: 'user',
-              content: message
-            }
-
-          ],
+          messages: formattedMessages,
 
           temperature: 0.7,
-          max_tokens: 1000
+          max_tokens: 1200
 
         })
 
@@ -155,12 +171,12 @@ simulações defensivas e laboratórios.
     );
 
     // =========================
-    // RAW RESPONSE
+    // RAW
     // =========================
 
-    const raw = await aiResponse.text();
+    const raw = await response.text();
 
-    console.log('RAW OPENROUTER:', raw);
+    console.log('RAW:', raw);
 
     // =========================
     // JSON
@@ -172,15 +188,11 @@ simulações defensivas e laboratórios.
 
       data = JSON.parse(raw);
 
-    } catch (jsonError) {
-
-      console.error('ERRO JSON:', jsonError);
+    } catch {
 
       return res.status(500).json({
-
-        error: 'Erro convertendo JSON',
+        error: 'Erro JSON',
         raw
-
       });
 
     }
@@ -189,83 +201,61 @@ simulações defensivas e laboratórios.
     // ERRO OPENROUTER
     // =========================
 
-    if (!aiResponse.ok) {
+    if (!response.ok) {
 
-      console.error('ERRO OPENROUTER:', data);
-
-      return res.status(aiResponse.status).json({
+      return res.status(response.status).json({
         error: data
       });
 
     }
 
     // =========================
-    // RESPOSTA IA
+    // RESPOSTA
     // =========================
 
     let reply = '';
 
-    // Formato OpenAI/OpenRouter
     if (
-
       data &&
       data.choices &&
-      data.choices.length > 0 &&
+      data.choices[0] &&
       data.choices[0].message &&
       data.choices[0].message.content
-
     ) {
 
       reply = data.choices[0].message.content;
 
     }
 
-    // fallback text
-    else if (
+    // fallback
+    if (!reply) {
 
-      data &&
-      data.choices &&
-      data.choices.length > 0 &&
-      data.choices[0].text
-
-    ) {
-
-      reply = data.choices[0].text;
-
-    }
-
-    // fallback final
-    if (!reply || reply.trim() === '') {
-
-      console.log('RESPOSTA VAZIA:', data);
-
-      reply = 'A IA retornou vazio.';
+      reply = 'Sem resposta da IA.';
 
     }
 
     // =========================
-    // RETORNO FINAL
+    // FORMATO ORIGINAL FRONTEND
     // =========================
 
-    // FORMATO ORIGINAL DO SEU FRONTEND
     return res.status(200).json({
 
       content: [
         {
           text: reply
         }
-      ]
+      ],
+
+      searched: false
 
     });
 
   } catch (error) {
 
-    console.error('ERRO GERAL:', error);
+    console.error(error);
 
     return res.status(500).json({
-
-      error: error.message || 'Erro interno'
-
+      error: error.message
     });
 
   }
