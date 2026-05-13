@@ -263,6 +263,51 @@ main{flex:1;display:flex;flex-direction:column;max-width:1100px;width:100%;margi
 
 /* TOOLS */
 .tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:6px;padding:10px 0;}
+
+/* EBOOK */
+.ebook-wrap{display:flex;flex-direction:column;gap:12px;height:100%;}
+.ebook-upload-zone{border:2px dashed var(--border2);border-radius:10px;padding:30px;text-align:center;cursor:pointer;transition:all .2s;background:rgba(140,80,255,.03);}
+.ebook-upload-zone:hover,.ebook-upload-zone.drag{border-color:var(--accent);background:rgba(140,80,255,.08);}
+.ebook-upload-zone .upload-icon{font-size:40px;margin-bottom:10px;}
+.ebook-upload-zone h3{font-size:14px;font-weight:700;color:var(--accent2);margin-bottom:6px;}
+.ebook-upload-zone p{font-size:11px;color:var(--muted);font-family:var(--mono);}
+#ebook-file-input{display:none;}
+.ebook-info{background:var(--surface);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;}
+.ebook-info-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+.ebook-icon{font-size:28px;}
+.ebook-name{font-size:13px;font-weight:700;color:var(--accent2);}
+.ebook-meta{font-size:10px;color:var(--muted);font-family:var(--mono);}
+.ebook-summary{font-size:12px;font-family:var(--mono);color:var(--text);line-height:1.7;margin-top:8px;padding-top:8px;border-top:1px solid var(--border);max-height:150px;overflow-y:auto;}
+.ebook-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
+.ebook-action-btn{font-size:11px;font-family:var(--mono);padding:5px 12px;border:1px solid var(--border2);border-radius:4px;cursor:pointer;color:var(--muted);background:transparent;transition:all .15s;}
+.ebook-action-btn:hover{color:var(--accent);border-color:var(--accent);}
+.ebook-action-btn.primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+.ebook-chat{flex:1;display:flex;flex-direction:column;min-height:0;}
+.ebook-messages{flex:1;overflow-y:auto;padding:8px 0;display:flex;flex-direction:column;gap:10px;scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
+.ebook-messages::-webkit-scrollbar{width:4px;}
+.ebook-messages::-webkit-scrollbar-thumb{background:var(--border2);}
+.ebook-msg{display:flex;gap:10px;}.ebook-msg.user{flex-direction:row-reverse;}
+.ebook-avatar{width:28px;height:28px;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:13px;border:1px solid var(--border);}
+.ebook-msg.agent .ebook-avatar{background:rgba(140,80,255,.1);}
+.ebook-msg.user .ebook-avatar{background:rgba(255,255,255,.05);}
+.ebook-bubble{max-width:82%;padding:9px 13px;font-size:13px;line-height:1.7;border-radius:2px 10px 10px 10px;font-family:var(--mono);}
+.ebook-msg.agent .ebook-bubble{background:var(--surface);border:1px solid var(--border);color:var(--text);}
+.ebook-msg.user .ebook-bubble{background:rgba(140,80,255,.15);border:1px solid var(--border2);color:var(--accent2);border-radius:10px 2px 10px 10px;}
+.ebook-bubble pre{background:#07040f;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:4px;padding:8px 10px;margin-top:6px;font-family:var(--mono);font-size:11px;overflow-x:auto;white-space:pre-wrap;color:#d4a0ff;}
+.ebook-bubble strong{color:var(--accent2);}
+.ebook-input-row{display:flex;gap:8px;margin-top:8px;flex-shrink:0;}
+.ebook-input{flex:1;background:var(--surface);border:1px solid var(--border2);border-radius:6px;color:var(--text);font-family:var(--mono);font-size:12px;padding:9px 12px;outline:none;transition:border-color .15s;}
+.ebook-input:focus{border-color:var(--accent);}
+.ebook-input::placeholder{color:var(--muted);}
+.ebook-send{padding:9px 14px;background:var(--accent);color:#fff;border:none;border-radius:6px;font-family:var(--sans);font-size:12px;font-weight:800;cursor:pointer;transition:opacity .15s;text-transform:uppercase;}
+.ebook-send:hover{opacity:.85;}.ebook-send:disabled{opacity:.4;cursor:not-allowed;}
+.ebook-progress{background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:16px;text-align:center;}
+.ebook-progress-bar-wrap{background:rgba(140,80,255,.1);border-radius:4px;height:6px;margin:10px 0;}
+.ebook-progress-bar{background:var(--accent);height:6px;border-radius:4px;transition:width .3s;}
+.ebook-progress-text{font-size:11px;font-family:var(--mono);color:var(--muted);}
+.ebook-suggestions{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;}
+.ebook-sug{font-size:10px;font-family:var(--mono);padding:3px 8px;border:1px solid var(--border2);border-radius:4px;cursor:pointer;color:var(--muted);background:transparent;transition:all .15s;}
+.ebook-sug:hover{color:var(--accent);border-color:var(--accent);}
 </style>
 </head>
 <body>
@@ -310,6 +355,7 @@ main{flex:1;display:flex;flex-direction:column;max-width:1100px;width:100%;margi
         <div class="tab" onclick="switchTab('lab')">🧪 Laboratório</div>
         <div class="tab" onclick="switchTab('terminal')">💻 Terminal</div>
         <div class="tab" onclick="switchTab('multiplayer');loadRooms()">🎮 Multiplayer</div>
+        <div class="tab" onclick="switchTab('ebook')">📖 Ebook/Doc</div>
         <div class="tab" onclick="switchTab('ref')">📚 Referência</div>
         <div class="tab" onclick="switchTab('tools')">🔧 Ferramentas</div>
       </div>
@@ -520,6 +566,73 @@ main{flex:1;display:flex;flex-direction:column;max-width:1100px;width:100%;margi
       </div>
 
       <!-- REFERÊNCIA -->
+
+      <!-- EBOOK READER -->
+      <div class="panel" id="panel-ebook">
+        <div class="scroll-panel" style="padding:10px 0;">
+          <div class="ebook-wrap" id="ebook-wrap">
+
+            <!-- Upload zone -->
+            <div id="ebook-upload-section">
+              <div class="ebook-upload-zone" id="ebook-drop-zone"
+                onclick="document.getElementById('ebook-file-input').click()"
+                ondragover="event.preventDefault();this.classList.add('drag')"
+                ondragleave="this.classList.remove('drag')"
+                ondrop="handleEbookDrop(event)">
+                <div class="upload-icon">📖</div>
+                <h3>Carregar Ebook ou Documento</h3>
+                <p>Clique ou arraste um arquivo PDF ou DOCX aqui</p>
+                <p style="margin-top:6px;color:var(--accent)">PDF · DOCX · TXT · até ~500.000 caracteres</p>
+              </div>
+              <input type="file" id="ebook-file-input" accept=".pdf,.docx,.doc,.txt" onchange="handleEbookFile(this)"/>
+            </div>
+
+            <!-- Progress -->
+            <div id="ebook-progress" style="display:none;" class="ebook-progress">
+              <div style="font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:6px" id="ebook-progress-title">Processando documento...</div>
+              <div class="ebook-progress-bar-wrap"><div class="ebook-progress-bar" id="ebook-progress-bar" style="width:0%"></div></div>
+              <div class="ebook-progress-text" id="ebook-progress-text">Extraindo texto...</div>
+            </div>
+
+            <!-- Book loaded -->
+            <div id="ebook-loaded" style="display:none;flex:1;flex-direction:column;gap:10px;">
+              <div class="ebook-info">
+                <div class="ebook-info-header">
+                  <div class="ebook-icon" id="ebook-icon">📖</div>
+                  <div>
+                    <div class="ebook-name" id="ebook-name">Documento</div>
+                    <div class="ebook-meta" id="ebook-meta"></div>
+                  </div>
+                  <button class="ebook-action-btn" onclick="resetEbook()" style="margin-left:auto;color:var(--danger);border-color:var(--danger)">✕ Remover</button>
+                </div>
+                <div class="ebook-summary" id="ebook-summary"></div>
+                <div class="ebook-actions">
+                  <button class="ebook-action-btn primary" onclick="ebookAsk('Faça um resumo completo e detalhado deste documento')">📋 Resumo Completo</button>
+                  <button class="ebook-action-btn" onclick="ebookAsk('Quais são os principais conceitos abordados neste documento?')">💡 Conceitos-chave</button>
+                  <button class="ebook-action-btn" onclick="ebookAsk('Liste os capítulos ou seções deste documento com uma breve descrição de cada um')">📑 Capítulos</button>
+                  <button class="ebook-action-btn" onclick="ebookAsk('Quais são as conclusões e pontos mais importantes deste documento?')">🎯 Conclusões</button>
+                  <button class="ebook-action-btn" onclick="ebookAsk('Crie 10 perguntas de estudo com respostas baseadas no conteúdo deste documento')">❓ Quiz do Conteúdo</button>
+                  <button class="ebook-action-btn" onclick="ebookAsk('Explique os termos técnicos mais importantes deste documento de forma didática')">🔤 Glossário</button>
+                </div>
+              </div>
+
+              <div class="ebook-chat" id="ebook-chat-section">
+                <div style="font-size:11px;font-family:var(--mono);color:var(--muted);margin-bottom:5px;flex-shrink:0">
+                  💬 Pergunte qualquer coisa sobre o documento:
+                </div>
+                <div class="ebook-suggestions" id="ebook-suggestions"></div>
+                <div class="ebook-messages" id="ebook-messages"></div>
+                <div class="ebook-input-row">
+                  <input class="ebook-input" id="ebook-question" placeholder="O que você quer saber sobre este documento?" onkeydown="if(event.key==='Enter')sendEbookMsg()"/>
+                  <button class="ebook-send" id="ebook-send-btn" onclick="sendEbookMsg()">Perguntar</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
       <div class="panel" id="panel-ref">
         <div class="scroll-panel">
           <div class="panel-section"><h3>// OWASP Top 10</h3><div class="grid2">
@@ -1131,11 +1244,307 @@ document.getElementById('mp-msg').addEventListener('keydown',e=>{if(e.key==='Ent
 
 // ── TABS ──────────────────────────────────────────────────────────────
 function switchTab(name){
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['chat','scanner','reputation','cve','lab','terminal','multiplayer','ref','tools'][i]===name));
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['chat','scanner','reputation','cve','lab','terminal','multiplayer','ebook','ref','tools'][i]===name));
   document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+name));
 }
 
 renderChips();
+
+// ── EBOOK READER ──────────────────────────────────────────────────────
+let currentBookId = null;
+let ebookHistory = [];
+
+function getEbookIcon(filename) {
+  const ext = filename.split('.').pop().toLowerCase();
+  if (ext === 'pdf') return '📕';
+  if (ext === 'docx' || ext === 'doc') return '📘';
+  return '📖';
+}
+
+function handleEbookDrop(event) {
+  event.preventDefault();
+  document.getElementById('ebook-drop-zone').classList.remove('drag');
+  const file = event.dataTransfer.files[0];
+  if (file) processEbookFile(file);
+}
+
+function handleEbookFile(input) {
+  const file = input.files[0];
+  if (file) processEbookFile(file);
+  input.value = '';
+}
+
+async function processEbookFile(file) {
+  const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/msword', 'text/plain'];
+  const ext = file.name.split('.').pop().toLowerCase();
+
+  if (!allowedTypes.includes(file.type) && !['pdf','docx','doc','txt'].includes(ext)) {
+    alert('Formato não suportado. Use PDF, DOCX ou TXT.');
+    return;
+  }
+
+  showEbookProgress('Lendo arquivo...', 10);
+
+  try {
+    let text = '';
+
+    if (ext === 'txt') {
+      text = await file.text();
+      setEbookProgress(60, 'Processando texto...');
+    } else if (ext === 'pdf') {
+      text = await extractPDFText(file);
+    } else if (ext === 'docx' || ext === 'doc') {
+      text = await extractDOCXText(file);
+    }
+
+    if (!text || text.trim().length < 100) {
+      hideEbookProgress();
+      alert('Não foi possível extrair texto do arquivo. Verifique se o PDF não é baseado em imagens (escaneado).');
+      return;
+    }
+
+    setEbookProgress(80, 'Enviando para análise...');
+
+    // Envia para o backend
+    const resp = await fetch('/api/ebook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'upload',
+        token: SESSION_TOKEN,
+        text: text.slice(0, 500000),
+        filename: file.name,
+        totalChars: text.length
+      })
+    });
+
+    const data = await resp.json();
+    if (!resp.ok || data.error) {
+      hideEbookProgress();
+      alert('Erro ao processar: ' + (data.error || 'Erro desconhecido'));
+      return;
+    }
+
+    setEbookProgress(100, 'Pronto!');
+    setTimeout(() => showEbookLoaded(data), 500);
+
+  } catch (e) {
+    hideEbookProgress();
+    alert('Erro ao processar arquivo: ' + e.message);
+  }
+}
+
+async function extractPDFText(file) {
+  setEbookProgress(20, 'Carregando leitor de PDF...');
+
+  // Carrega pdf.js dinamicamente
+  if (!window.pdfjsLib) {
+    await new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc =
+      'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+
+  setEbookProgress(35, 'Lendo páginas do PDF...');
+
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const totalPages = pdf.numPages;
+  let fullText = '';
+
+  for (let i = 1; i <= totalPages; i++) {
+    const page = await pdf.getPage(i);
+    const content = await page.getTextContent();
+    const pageText = content.items.map(item => item.str).join(' ');
+    fullText += pageText + '\n';
+
+    const progress = 35 + Math.floor((i / totalPages) * 40);
+    setEbookProgress(progress, `Lendo página ${i} de ${totalPages}...`);
+  }
+
+  return fullText;
+}
+
+async function extractDOCXText(file) {
+  setEbookProgress(20, 'Carregando leitor de DOCX...');
+
+  if (!window.mammoth) {
+    await new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js';
+      script.onload = resolve;
+      script.onerror = reject;
+      document.head.appendChild(script);
+    });
+  }
+
+  setEbookProgress(50, 'Extraindo texto do DOCX...');
+  const arrayBuffer = await file.arrayBuffer();
+  const result = await window.mammoth.extractRawText({ arrayBuffer });
+  return result.value || '';
+}
+
+function showEbookProgress(title, pct) {
+  document.getElementById('ebook-upload-section').style.display = 'none';
+  document.getElementById('ebook-progress').style.display = 'block';
+  document.getElementById('ebook-loaded').style.display = 'none';
+  document.getElementById('ebook-progress-title').textContent = title;
+  document.getElementById('ebook-progress-bar').style.width = pct + '%';
+  document.getElementById('ebook-progress-text').textContent = '';
+}
+
+function setEbookProgress(pct, text) {
+  document.getElementById('ebook-progress-bar').style.width = pct + '%';
+  document.getElementById('ebook-progress-text').textContent = text;
+}
+
+function hideEbookProgress() {
+  document.getElementById('ebook-upload-section').style.display = 'block';
+  document.getElementById('ebook-progress').style.display = 'none';
+}
+
+function showEbookLoaded(data) {
+  currentBookId = data.bookId;
+  ebookHistory = [];
+
+  document.getElementById('ebook-upload-section').style.display = 'none';
+  document.getElementById('ebook-progress').style.display = 'none';
+  const loaded = document.getElementById('ebook-loaded');
+  loaded.style.display = 'flex';
+
+  document.getElementById('ebook-icon').textContent = getEbookIcon(data.filename);
+  document.getElementById('ebook-name').textContent = data.filename;
+  document.getElementById('ebook-meta').textContent =
+    `${data.chunks} seções · ${(data.wordCount || 0).toLocaleString()} palavras · ${(data.totalChars || 0).toLocaleString()} caracteres`;
+  document.getElementById('ebook-summary').textContent = data.summary || 'Documento carregado!';
+
+  // Sugestões dinâmicas
+  const sugs = [
+    'Explique o capítulo 1',
+    'Quais são as ideias principais?',
+    'Defina os termos técnicos',
+    'Faça um mapa mental dos tópicos',
+    'Compare os conceitos apresentados',
+    'O que o autor conclui?'
+  ];
+  document.getElementById('ebook-suggestions').innerHTML = sugs.map(s =>
+    `<button class="ebook-sug" onclick="ebookAsk('${s}')">${s}</button>`
+  ).join('');
+
+  document.getElementById('ebook-messages').innerHTML = '';
+  addEbookMessage('agent', `✅ Documento carregado com sucesso!
+
+${data.summary || 'Pronto para responder suas perguntas.'}`);
+}
+
+function resetEbook() {
+  currentBookId = null;
+  ebookHistory = [];
+  document.getElementById('ebook-upload-section').style.display = 'block';
+  document.getElementById('ebook-progress').style.display = 'none';
+  document.getElementById('ebook-loaded').style.display = 'none';
+  document.getElementById('ebook-messages').innerHTML = '';
+  document.getElementById('ebook-file-input').value = '';
+}
+
+function ebookAsk(question) {
+  document.getElementById('ebook-question').value = question;
+  sendEbookMsg();
+}
+
+function escapeEbookHtml(text) {
+  return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function formatEbookResponse(text) {
+  text = text.replace(/```[\w\s]*\n?([\s\S]*?)```/g, (_,c) => `<pre>${escapeEbookHtml(c.trim())}</pre>`);
+  text = text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+  text = text.replace(/`([^`\n]+)`/g, '<code style="background:rgba(140,80,255,.12);padding:1px 4px;border-radius:3px;color:var(--accent2)">$1</code>');
+  text = text.replace(/\n/g, '<br>');
+  return DOMPurify.sanitize(text, { ALLOWED_TAGS: ['strong','code','pre','br'], ALLOWED_ATTR: ['style'] });
+}
+
+function addEbookMessage(role, text) {
+  const box = document.getElementById('ebook-messages');
+  const wrap = document.createElement('div');
+  wrap.className = 'ebook-msg ' + (role === 'user' ? 'user' : 'agent');
+  const av = document.createElement('div');
+  av.className = 'ebook-avatar';
+  av.textContent = role === 'user' ? '👤' : '📖';
+  const b = document.createElement('div');
+  b.className = 'ebook-bubble';
+  b.innerHTML = role === 'user' ? escapeEbookHtml(text).replace(/\n/g,'<br>') : formatEbookResponse(text);
+  wrap.appendChild(av); wrap.appendChild(b);
+  box.appendChild(wrap);
+  box.scrollTop = box.scrollHeight;
+}
+
+function showEbookTyping() {
+  const box = document.getElementById('ebook-messages');
+  const wrap = document.createElement('div');
+  wrap.className = 'ebook-msg agent'; wrap.id = 'ebook-typing';
+  const av = document.createElement('div'); av.className = 'ebook-avatar'; av.textContent = '📖';
+  const b = document.createElement('div'); b.className = 'ebook-bubble';
+  b.innerHTML = '<div class="typing"><span></span><span></span><span></span></div>';
+  wrap.appendChild(av); wrap.appendChild(b);
+  box.appendChild(wrap); box.scrollTop = box.scrollHeight;
+}
+function hideEbookTyping() { const t = document.getElementById('ebook-typing'); if(t) t.remove(); }
+
+async function sendEbookMsg() {
+  if (!currentBookId) { alert('Nenhum documento carregado!'); return; }
+  const question = document.getElementById('ebook-question').value.trim();
+  if (!question) return;
+
+  document.getElementById('ebook-question').value = '';
+  document.getElementById('ebook-send-btn').disabled = true;
+
+  addEbookMessage('user', question);
+  ebookHistory.push({ role: 'user', content: question });
+  showEbookTyping();
+
+  try {
+    const resp = await fetch('/api/ebook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'chat',
+        token: SESSION_TOKEN,
+        bookId: currentBookId,
+        question,
+        history: ebookHistory.slice(-6)
+      })
+    });
+
+    const data = await resp.json();
+    hideEbookTyping();
+
+    const answer = data.answer || data.error || 'Sem resposta.';
+    ebookHistory.push({ role: 'assistant', content: answer });
+    addEbookMessage('agent', answer);
+
+  } catch (e) {
+    hideEbookTyping();
+    addEbookMessage('agent', '⚠️ Erro de conexão. Tente novamente.');
+  }
+
+  document.getElementById('ebook-send-btn').disabled = false;
+}
+
+// Listener seguro - o elemento existe no DOM mas pode estar oculto
+const ebookQEl = document.getElementById('ebook-question');
+if (ebookQEl) {
+  ebookQEl.addEventListener('keydown', e => {
+    if (e.key === 'Enter') sendEbookMsg();
+  });
+}
+
 </script>
 </body>
 </html>
