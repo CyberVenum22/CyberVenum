@@ -387,6 +387,8 @@ main{flex:1;display:flex;flex-direction:column;max-width:1100px;width:100%;margi
           <button class="mode-btn" onclick="setMode('checklist','CHECKLIST')" data-mode="checklist">✅ Checklist</button>
           <button class="mode-btn" onclick="setMode('attack_surface','SUPERFÍCIE')" data-mode="attack_surface">🗺️ Superfície</button>
           <button class="mode-btn" onclick="setMode('policy','POLÍTICA')" data-mode="policy">📄 Política</button>
+          <div class="mode-sep"></div>
+          <button class="mode-btn" style="border-color:rgba(80,200,140,.4);color:rgba(80,200,140,.8);" onclick="setMode('soc','SOC')" data-mode="soc">🛡️ SOC Analyst</button>
         </div>
         <div id="chips"></div>
         <div id="chat-box"></div>
@@ -715,9 +717,10 @@ const MODE_CHIPS={
   attack_surface:['Mapear superfície SaaS','Mapear superfície e-commerce','Superfície AD'],
   policy:['Política de Segurança da Informação','Política de Senhas','Política de Acesso Remoto'],
   flashcard:['Flashcards pentest','Flashcards forense','Flashcards criptografia'],
-  timeline:['Construir timeline de ataque','Analisar logs suspeitos','Mapear TTPs MITRE']
+  timeline:['Construir timeline de ataque','Analisar logs suspeitos','Mapear TTPs MITRE'],
+  soc:['O que faz um analista SOC L1 no dia a dia?','Explique os Event IDs críticos do Windows para SOC','Como identificar brute force nos logs SIEM?','Como detectar Pass-the-Hash nos eventos Windows?','Queries Splunk para investigar incidente','Como funciona o GuardDuty da AWS?','Crie playbook de resposta a Ransomware','Como analisar PCAP suspeito no Wireshark?','Script Python para consultar IPs no AbuseIPDB','Como usar MITRE ATT&CK no Blue Team?','Explique VPC Flow Logs na AWS','Quais certificações tirar primeiro: Security+ ou CySA+?','Simule um alerta SOC real para eu praticar triagem','Como detectar C2 beaconing nos logs?','Script boto3 para auditar segurança AWS']
 };
-const MODE_HINTS={chat:'Pergunte sobre cibersegurança',payload:'⚠️ Apenas ambientes autorizados. Descreva o payload.',redteam:'Descreva a infraestrutura para o plano de ataque',pentest:'Descreva as vulnerabilidades para o relatório',osint:'Cole URL, IP, domínio ou descreva o alvo',incident:'Descreva o incidente para guiar a resposta',phishing:'Cenário para criar material educativo',quiz:'Tema ou nível para o quiz',ctf:'Descreva o desafio CTF',codereview:'Cole o código para auditoria',fileanalysis:'Cole o conteúdo ou use 📎',decoder:'Cole texto codificado',password:'Digite a senha para análise',cvss:'Descreva a vulnerabilidade',wordlist:'Informe dados do alvo',checklist:'Informe o ambiente',attack_surface:'Descreva a infraestrutura',policy:'Tipo de política que deseja',flashcard:'Tema dos flashcards',timeline:'Eventos ou logs para a timeline'};
+const MODE_HINTS={chat:'Pergunte sobre cibersegurança',payload:'⚠️ Apenas ambientes autorizados. Descreva o payload.',redteam:'Descreva a infraestrutura para o plano de ataque',pentest:'Descreva as vulnerabilidades para o relatório',osint:'Cole URL, IP, domínio ou descreva o alvo',incident:'Descreva o incidente para guiar a resposta',phishing:'Cenário para criar material educativo',quiz:'Tema ou nível para o quiz',ctf:'Descreva o desafio CTF',codereview:'Cole o código para auditoria',fileanalysis:'Cole o conteúdo ou use 📎',decoder:'Cole texto codificado',password:'Digite a senha para análise',cvss:'Descreva a vulnerabilidade',wordlist:'Informe dados do alvo',checklist:'Informe o ambiente',attack_surface:'Descreva a infraestrutura',policy:'Tipo de política que deseja',flashcard:'Tema dos flashcards',timeline:'Eventos ou logs para a timeline',soc:'Pergunte sobre Blue Team, SOC, AWS Security, Redes ou peça automação de tarefas'};
 
 function renderChips(){
   const chips=MODE_CHIPS[currentMode]||MODE_CHIPS.chat;
@@ -729,6 +732,12 @@ function setMode(mode,label){
   document.querySelectorAll('.mode-btn').forEach(b=>b.classList.toggle('active',b.dataset.mode===mode));
   document.getElementById('mode-indicator').textContent=label;
   renderChips();
+  const modeMessages={
+    payload:'⚠️ <strong>Modo Payload Generator ativo</strong> — Gero payloads completos para ambientes AUTORIZADOS.',
+    redteam:'🎯 <strong>Modo Red Team Simulator ativo</strong> — Descreva a infraestrutura para o plano de ataque APT-level.',
+    soc:'🛡️ <strong>Modo SOC Analyst ativo</strong> — Seu instrutor de Blue Team, AWS Security e Redes.<br><br>Ensino como um analista sênior ensinaria um júnior no primeiro dia. Pode perguntar sobre análise de logs, detecção de ataques, AWS Security, automação Python, certificações ou pedir para simular um alerta SOC real!'
+  };
+  if(modeMessages[mode]) addMessage('agent', modeMessages[mode], true);
 }
 
 // ── LOGIN ─────────────────────────────────────────────────────────────
